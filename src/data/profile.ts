@@ -1,7 +1,9 @@
+import avatarImage from "../../assets/photos/hadhihavath.jpg";
+
 export const profile = {
   name: "Hadhi Havath",
   handle: "hadhihavath",
-  avatar: "https://avatars.githubusercontent.com/u/64075280?v=4",
+  avatar: avatarImage,
   bio: "I build it, then I secure it.",
   tagline:
     "Full Stack Developer specializing in Python & Django. Ethical Hacking & AI/ML Researcher.",
