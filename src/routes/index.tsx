@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import {
   Github, Mail, MapPin, Sparkles, Shield, Cpu, Code2,
-  ArrowUpRight, Terminal as TerminalIcon, Zap, Globe,
+  ArrowUpRight, Terminal as TerminalIcon, Zap,
   Instagram, MessageCircle,
 } from "lucide-react";
 import { CursorGlow } from "@/components/CursorGlow";
@@ -433,15 +433,6 @@ function Contact() {
               >
                 <Instagram className="size-4" />
                 instagram / @mr.havath
-              </a>
-              <a
-                href={profile.blog}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl glass border-muted-foreground/20 px-5 py-3 text-sm font-medium transition-all hover:scale-105 hover:border-[color:var(--neon-3)] hover:shadow-[0_0_15px_-3px_color-mix(in_oklab,var(--neon-3)_40%,transparent)]"
-              >
-                <Globe className="size-4" />
-                portfolio mirror
               </a>
             </div>
             <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-mono text-xs text-muted-foreground">

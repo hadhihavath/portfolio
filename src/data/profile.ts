@@ -6,7 +6,6 @@ export const profile = {
   tagline:
     "Full Stack Developer specializing in Python & Django. Ethical Hacking & AI/ML Researcher.",
   github: "https://github.com/hadhihavath",
-  blog: "https://hadhihavath.github.io/portfolio/",
   followers: 1,
   following: 3,
   publicRepos: 36,
