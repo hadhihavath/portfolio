@@ -4,6 +4,7 @@ import { useRef } from "react";
 import {
   Github, Mail, MapPin, Sparkles, Shield, Cpu, Code2,
   ArrowUpRight, Terminal as TerminalIcon, Zap, Globe,
+  Instagram, MessageCircle,
 } from "lucide-react";
 import { CursorGlow } from "@/components/CursorGlow";
 import { MatrixRain } from "@/components/MatrixRain";
@@ -396,24 +397,48 @@ function Contact() {
             </h2>
             <p className="mx-auto mt-5 max-w-xl text-muted-foreground">
               I'm open to full-time roles, freelance builds, and security audits.
-              Drop a line on GitHub or open the portfolio mirror.
+              Get in touch via any of the channels below.
             </p>
-            <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+            <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
               <a
                 href={profile.github}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-[color:var(--neon)] px-6 py-3 text-sm font-medium text-primary-foreground transition-all hover:scale-105"
-                style={{ boxShadow: "0 0 40px color-mix(in oklab, var(--neon) 50%, transparent)" }}
+                className="inline-flex items-center gap-2 rounded-xl glass border-muted-foreground/20 px-5 py-3 text-sm font-medium transition-all hover:scale-105 hover:border-[color:var(--neon)] hover:shadow-[0_0_15px_-3px_color-mix(in_oklab,var(--neon)_40%,transparent)]"
               >
                 <Github className="size-4" />
-                @hadhihavath
+                github / @hadhihavath
+              </a>
+              <a
+                href="mailto:mrhavath@gmail.com"
+                className="inline-flex items-center gap-2 rounded-xl glass border-muted-foreground/20 px-5 py-3 text-sm font-medium transition-all hover:scale-105 hover:border-[color:var(--neon-3)] hover:shadow-[0_0_15px_-3px_color-mix(in_oklab,var(--neon-3)_40%,transparent)]"
+              >
+                <Mail className="size-4" />
+                email / mrhavath@gmail.com
+              </a>
+              <a
+                href="https://wa.me/919207659510"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl glass border-muted-foreground/20 px-5 py-3 text-sm font-medium transition-all hover:scale-105 hover:border-[color:var(--neon)] hover:shadow-[0_0_15px_-3px_color-mix(in_oklab,var(--neon)_40%,transparent)]"
+              >
+                <MessageCircle className="size-4" />
+                whatsapp / +919207659510
+              </a>
+              <a
+                href="https://instagram.com/mr.havath"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl glass border-muted-foreground/20 px-5 py-3 text-sm font-medium transition-all hover:scale-105 hover:border-[color:var(--neon-2)] hover:shadow-[0_0_15px_-3px_color-mix(in_oklab,var(--neon-2)_40%,transparent)]"
+              >
+                <Instagram className="size-4" />
+                instagram / @mr.havath
               </a>
               <a
                 href={profile.blog}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full glass px-6 py-3 text-sm font-medium transition-all hover:neon-border"
+                className="inline-flex items-center gap-2 rounded-xl glass border-muted-foreground/20 px-5 py-3 text-sm font-medium transition-all hover:scale-105 hover:border-[color:var(--neon-3)] hover:shadow-[0_0_15px_-3px_color-mix(in_oklab,var(--neon-3)_40%,transparent)]"
               >
                 <Globe className="size-4" />
                 portfolio mirror
