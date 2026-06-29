@@ -1,3 +1,4 @@
+/* mr.havath */
 type AppErrorOptions = {
   mechanism?: "manual" | "onerror" | "unhandledrejection" | "react_error_boundary";
   handled?: boolean;

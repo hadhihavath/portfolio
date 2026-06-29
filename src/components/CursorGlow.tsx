@@ -1,3 +1,4 @@
+/* mr.havath */
 import { useEffect, useState } from "react";
 
 export function CursorGlow() {

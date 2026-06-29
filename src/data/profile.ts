@@ -1,3 +1,4 @@
+/* mr.havath */
 import avatarImage from "../../assets/photos/hadhihavath.jpg";
 
 export const profile = {
