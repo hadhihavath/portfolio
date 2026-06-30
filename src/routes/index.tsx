@@ -1,7 +1,7 @@
 /* mr.havath */
 import { createFileRoute } from "@tanstack/react-router";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import {
   Github, Mail, MapPin, Sparkles, Shield, Cpu, Code2,
   ArrowUpRight, Terminal as TerminalIcon, Zap,
@@ -12,6 +12,7 @@ import { MatrixRain } from "@/components/MatrixRain";
 import { Terminal } from "@/components/Terminal";
 import { ProjectCard } from "@/components/ProjectCard";
 import { profile, repos, stack } from "@/data/profile";
+import { trackVisit } from "@/lib/visitor-tracker";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -30,6 +31,10 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  useEffect(() => {
+    trackVisit();
+  }, []);
+
   return (
     <main className="relative min-h-screen overflow-x-hidden">
       <CursorGlow />

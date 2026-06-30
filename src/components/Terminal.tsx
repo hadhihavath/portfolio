@@ -1,6 +1,7 @@
 /* mr.havath */
 import { useEffect, useRef, useState } from "react";
 import { profile, repos, stack } from "@/data/profile";
+import { fetchVisitorLogs } from "@/lib/visitor-tracker";
 
 type HistoryItem = {
   type: "input" | "output";
@@ -17,6 +18,7 @@ export function Terminal() {
   ]);
   
   const [input, setInput] = useState("");
+  const [isWaitingForPassword, setIsWaitingForPassword] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -26,9 +28,63 @@ export function Terminal() {
     }
   }, [history]);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       const trimmedInput = input.trim();
+      
+      if (isWaitingForPassword) {
+        const correctPassword = import.meta.env.VITE_ANALYTICS_PASSWORD || "mrhavath";
+        const newHistory = [
+          ...history,
+          { type: "input" as const, prompt: "Password:", text: "********" }
+        ];
+
+        if (trimmedInput === correctPassword) {
+          setHistory([
+            ...newHistory,
+            { type: "output", text: "Authenticating...\nAccess granted.\n\nFetching visitor logs..." }
+          ]);
+          setInput("");
+          setIsWaitingForPassword(false);
+
+          try {
+            const logs = await fetchVisitorLogs();
+            if (logs.length === 0) {
+              setHistory((prev) => [
+                ...prev,
+                { type: "output", text: "No visitor logs found. Connect Supabase to track global traffic." }
+              ]);
+            } else {
+              let logTable = "IP Address      | Location                       | Device          | Date & Time\n";
+              logTable += "----------------|--------------------------------|-----------------|---------------------\n";
+
+              logs.forEach((log) => {
+                const date = new Date(log.created_at).toLocaleString();
+                const ip = log.ip.padEnd(15).substring(0, 15);
+                const loc = log.location.padEnd(30).substring(0, 30);
+                const dev = log.device.padEnd(15).substring(0, 15);
+                logTable += `${ip} | ${loc} | ${dev} | ${date}\n`;
+              });
+
+              setHistory((prev) => [...prev, { type: "output", text: logTable }]);
+            }
+          } catch (err) {
+            setHistory((prev) => [
+              ...prev,
+              { type: "output", text: "Error: Failed to fetch visitor database logs." }
+            ]);
+          }
+        } else {
+          setHistory([
+            ...newHistory,
+            { type: "output", text: "Access denied: Invalid credentials." }
+          ]);
+          setInput("");
+          setIsWaitingForPassword(false);
+        }
+        return;
+      }
+
       const newHistory = [...history, { type: "input" as const, prompt: "guest@hadhi:~$", text: trimmedInput }];
       
       if (trimmedInput === "") {
@@ -60,6 +116,13 @@ export function Terminal() {
           break;
         case "clear":
           setHistory([]);
+          setInput("");
+          return;
+        case "sudo logs":
+        case "visitors":
+        case "logs":
+          setIsWaitingForPassword(true);
+          setHistory(newHistory);
           setInput("");
           return;
         default:
@@ -109,10 +172,12 @@ export function Terminal() {
         
         {/* Active Input Line */}
         <div className="flex items-center gap-2">
-          <span className="text-[color:var(--neon)] select-none">guest@hadhi:~$</span>
+          <span className="text-[color:var(--neon)] select-none">
+            {isWaitingForPassword ? "Password: " : "guest@hadhi:~$"}
+          </span>
           <input
             ref={inputRef}
-            type="text"
+            type={isWaitingForPassword ? "password" : "text"}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
