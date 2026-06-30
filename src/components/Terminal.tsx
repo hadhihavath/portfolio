@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { profile, repos, stack } from "@/data/profile";
 import { fetchVisitorLogs } from "@/lib/visitor-tracker";
+import { GUEST_FILES, ROOT_FILES } from "@/data/virtual-fs";
 
 type HistoryItem = {
   type: "input" | "output";
@@ -14,11 +15,15 @@ export function Terminal() {
     { type: "input", prompt: "guest@hadhi:~$", text: "whoami" },
     { type: "output", text: "hadhi havath — full stack dev · ethical hacker · ai/ml researcher\nSpecializing in Python, Django, application security, and AI integrations." },
     { type: "input", prompt: "guest@hadhi:~$", text: "help" },
-    { type: "output", text: "Available commands:\n  whoami   - About Hadhi Havath\n  skills   - List technical skills and stack\n  projects - List key projects\n  contact  - Display contact channels\n  status   - Check current availability\n  clear    - Clear terminal window" }
+    { type: "output", text: "Available commands:\n  whoami   - About Hadhi Havath\n  skills   - List technical skills and stack\n  projects - List key projects\n  contact  - Display contact channels\n  status   - Check current availability\n  ls       - List virtual directory files\n  cat      - Display file contents\n  clear    - Clear terminal window\n  \nHint: Try listing directory files using 'ls'." }
   ]);
   
   const [input, setInput] = useState("");
+  const [isRoot, setIsRoot] = useState(false);
   const [isWaitingForPassword, setIsWaitingForPassword] = useState(false);
+  const [isWaitingForFlag, setIsWaitingForFlag] = useState(false);
+  const [isElevating, setIsElevating] = useState(false);
+
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -28,15 +33,40 @@ export function Terminal() {
     }
   }, [history]);
 
+  const executeBypassAnimation = () => {
+    setIsElevating(true);
+    setInput("");
+    const steps = [
+      { text: "\n[!] SYSTEM BREACH PROTOCOL INITIALIZED...", delay: 200 },
+      { text: "[+] INJECTING SHELLCODE (Buffer Overflow exploit)...", delay: 800 },
+      { text: "[+] ELEVATING PRIVILEGES (SetUID validation bypass)...", delay: 1400 },
+      { text: "[+] SECURITY CONTEXT: root@hadhi:~#", delay: 2000 },
+      { text: "\n[SUCCESS] ROOT SHELL UNLOCKED!\n\nType 'ls' to see unlocked administrative files.\nType 'cat resume.pdf' to view credentials.", delay: 2600 }
+    ];
+
+    steps.forEach((step, index) => {
+      setTimeout(() => {
+        setHistory((prev) => [...prev, { type: "output", text: step.text }]);
+        if (index === 3) {
+          setIsRoot(true);
+        }
+        if (index === steps.length - 1) {
+          setIsElevating(false);
+        }
+      }, step.delay);
+    });
+  };
+
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       const trimmedInput = input.trim();
       
+      // 1. Password input for Visitor Logs
       if (isWaitingForPassword) {
         const correctPassword = import.meta.env.VITE_ANALYTICS_PASSWORD || "mrhavath";
         const newHistory = [
           ...history,
-          { type: "input" as const, prompt: "Password:", text: "********" }
+          { type: "input" as const, prompt: "Password: ", text: "********" }
         ];
 
         if (trimmedInput === correctPassword) {
@@ -85,7 +115,30 @@ export function Terminal() {
         return;
       }
 
-      const newHistory = [...history, { type: "input" as const, prompt: "guest@hadhi:~$", text: trimmedInput }];
+      // 2. Prompted flag input for Sudo Root
+      if (isWaitingForFlag) {
+        const newHistory = [
+          ...history,
+          { type: "input" as const, prompt: "Root Key: ", text: "********" }
+        ];
+        setInput("");
+        setIsWaitingForFlag(false);
+
+        if (trimmedInput === "hadhi_hacker_flag_2026") {
+          setHistory(newHistory);
+          executeBypassAnimation();
+        } else {
+          setHistory([
+            ...newHistory,
+            { type: "output", text: "Access denied: Invalid privilege key payload." }
+          ]);
+        }
+        return;
+      }
+
+      // 3. Normal command processing
+      const currentPrompt = isRoot ? "root@hadhi:~#" : "guest@hadhi:~$";
+      const newHistory = [...history, { type: "input" as const, prompt: currentPrompt, text: trimmedInput }];
       
       if (trimmedInput === "") {
         setHistory(newHistory);
@@ -93,16 +146,21 @@ export function Terminal() {
         return;
       }
 
+      const cmdParts = trimmedInput.split(/\s+/);
+      const baseCmd = cmdParts[0].toLowerCase();
+      const arg = cmdParts.slice(1).join(" ");
+
       let output = "";
-      switch (trimmedInput.toLowerCase()) {
+      switch (baseCmd) {
         case "help":
-          output = "Available commands:\n  whoami   - About Hadhi Havath\n  skills   - List technical skills and stack\n  projects - List key projects\n  contact  - Display contact channels\n  status   - Check current availability\n  clear    - Clear terminal window";
+          output = isRoot
+            ? "Available commands:\n  whoami   - About Hadhi Havath\n  skills   - List technical skills and stack\n  projects - List key projects\n  contact  - Display contact channels\n  status   - Check current availability\n  ls       - List virtual directory files\n  cat      - Display file contents (e.g. cat secret_dossier.txt)\n  clear    - Clear terminal window"
+            : "Available commands:\n  whoami   - About Hadhi Havath\n  skills   - List technical skills and stack\n  projects - List key projects\n  contact  - Display contact channels\n  status   - Check current availability\n  ls       - List virtual directory files\n  cat      - Display file contents (e.g. cat flag.txt)\n  decrypt  - Decode a Base64 string (e.g. decrypt <string>)\n  clear    - Clear terminal window\n  \nHint: Try listing files with 'ls'.";
           break;
         case "whoami":
           output = `Hadhi Havath — ${profile.tagline}\n"I build it, then I secure it."`;
           break;
         case "skills":
-        case "cat stack.txt":
           output = `Technical Stack:\n  ${stack.join(" · ")}`;
           break;
         case "projects":
@@ -118,7 +176,73 @@ export function Terminal() {
           setHistory([]);
           setInput("");
           return;
-        case "sudo logs":
+        case "ls":
+        case "dir":
+          const filesList = isRoot ? ROOT_FILES : GUEST_FILES;
+          output = Object.keys(filesList).join("    ");
+          break;
+        case "cat":
+          if (!arg) {
+            output = "usage: cat <filename>";
+          } else {
+            const files = isRoot ? ROOT_FILES : GUEST_FILES;
+            const file = files[arg];
+            if (file) {
+              output = file.content;
+              if (isRoot && arg === "resume.pdf") {
+                window.open("https://github.com/hadhihavath", "_blank");
+              }
+            } else if (arg === "stack.txt") {
+              output = `Technical Stack:\n  ${stack.join(" · ")}`;
+            } else {
+              output = `cat: ${arg}: No such file or directory`;
+            }
+          }
+          break;
+        case "decrypt":
+          if (!arg) {
+            output = "usage: decrypt <base64_string>";
+          } else {
+            try {
+              output = `Decrypted: ${atob(arg)}`;
+            } catch {
+              output = "decrypt: failed to decode. Invalid Base64 format.";
+            }
+          }
+          break;
+        case "sudo":
+          if (!arg) {
+            output = "usage: sudo [command]";
+          } else {
+            const subParts = arg.split(/\s+/);
+            const subCmd = subParts[0].toLowerCase();
+            const subArg = subParts.slice(1).join(" ");
+            
+            if (subCmd === "root") {
+              if (subArg) {
+                if (subArg === "hadhi_hacker_flag_2026") {
+                  setHistory(newHistory);
+                  executeBypassAnimation();
+                  return;
+                } else {
+                  output = "sudo: access denied: invalid root token payload";
+                }
+              } else {
+                setIsWaitingForFlag(true);
+                setHistory(newHistory);
+                setInput("");
+                return;
+              }
+            } else if (subCmd === "logs" || subCmd === "visitors") {
+              setIsWaitingForPassword(true);
+              setHistory(newHistory);
+              setInput("");
+              return;
+            } else {
+              output = `sudo: command not found: ${subCmd}`;
+            }
+          }
+          break;
         case "visitors":
         case "logs":
           setIsWaitingForPassword(true);
@@ -142,14 +266,20 @@ export function Terminal() {
   return (
     <div 
       onClick={handleContainerClick}
-      className="glass rounded-lg p-4 font-mono text-sm md:text-base border border-border/50 shadow-lg cursor-text"
+      className={`glass rounded-lg p-4 font-mono text-sm md:text-base border shadow-lg cursor-text transition-all duration-500 ${
+        isRoot 
+          ? "border-red-500/50 shadow-[0_0_25px_rgba(239,68,68,0.25)]" 
+          : "border-border/50"
+      }`}
     >
       {/* Terminal Title Bar */}
       <div className="mb-3 flex items-center gap-2 border-b border-border/30 pb-2 select-none">
-        <span className="size-3 rounded-full bg-red-500/80 animate-pulse" />
+        <span className={`size-3 rounded-full ${isRoot ? "bg-red-500 animate-pulse" : "bg-red-500/80"}`} />
         <span className="size-3 rounded-full bg-yellow-500/80" />
         <span className="size-3 rounded-full bg-green-500/80" />
-        <span className="ml-2 text-xs text-muted-foreground">guest@hadhi: ~ (interactive terminal)</span>
+        <span className="ml-2 text-xs text-muted-foreground">
+          {isRoot ? "root@hadhi: ~ (administrative shell)" : "guest@hadhi: ~ (interactive terminal)"}
+        </span>
       </div>
 
       {/* Terminal Screen Content */}
@@ -171,24 +301,38 @@ export function Terminal() {
         ))}
         
         {/* Active Input Line */}
-        <div className="flex items-center gap-2">
-          <span className="text-[color:var(--neon)] select-none">
-            {isWaitingForPassword ? "Password: " : "guest@hadhi:~$"}
-          </span>
-          <input
-            ref={inputRef}
-            type={isWaitingForPassword ? "password" : "text"}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            className="flex-1 bg-transparent border-none outline-none text-foreground caret-[color:var(--neon)] font-mono p-0 focus:ring-0"
-            autoFocus
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="off"
-            spellCheck="false"
-          />
-        </div>
+        {!isElevating && (
+          <div className="flex items-center gap-2">
+            <span className="text-[color:var(--neon)] select-none">
+              {isWaitingForPassword 
+                ? "Password: " 
+                : isWaitingForFlag 
+                  ? "Root Key: " 
+                  : isRoot 
+                    ? "root@hadhi:~#" 
+                    : "guest@hadhi:~$"}
+            </span>
+            <input
+              ref={inputRef}
+              type={isWaitingForPassword || isWaitingForFlag ? "password" : "text"}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className="flex-1 bg-transparent border-none outline-none text-foreground caret-[color:var(--neon)] font-mono p-0 focus:ring-0"
+              autoFocus
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck="false"
+            />
+          </div>
+        )}
+
+        {isElevating && (
+          <div className="text-[color:var(--neon-2)] animate-pulse font-mono text-xs select-none">
+            Executing exploit payload... Please hold.
+          </div>
+        )}
       </div>
     </div>
   );
