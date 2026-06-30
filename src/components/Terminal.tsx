@@ -33,48 +33,6 @@ export function Terminal() {
     }
   }, [history]);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const urlParams = new URLSearchParams(window.location.search);
-      const adminPass = urlParams.get("admin") || urlParams.get("password") || urlParams.get("pass");
-      const correctPassword = import.meta.env.VITE_ANALYTICS_PASSWORD || "mrhavath";
-
-      if (adminPass === correctPassword) {
-        setIsRoot(true);
-
-        // Fetch logs silently and display immediately
-        fetchVisitorLogs()
-          .then((logs) => {
-            let logTable = "IP Address      | Location                       | Device          | Date & Time\n";
-            logTable += "----------------|--------------------------------|-----------------|---------------------\n";
-            logs.forEach((log) => {
-              const date = new Date(log.created_at).toLocaleString();
-              const ip = log.ip.padEnd(15).substring(0, 15);
-              const loc = log.location.padEnd(30).substring(0, 30);
-              const dev = log.device.padEnd(15).substring(0, 15);
-              logTable += `${ip} | ${loc} | ${dev} | ${date}\n`;
-            });
-
-            setHistory((prev) => [
-              ...prev,
-              { type: "input", prompt: "system@kernel:~#", text: "autologin --logs" },
-              { type: "output", text: `[SUCCESS] Admin autologin completed.\n\nVisitor Database Logs:\n${logTable}` }
-            ]);
-          })
-          .catch(() => {
-            setHistory((prev) => [
-              ...prev,
-              { type: "output", text: "Autologin error: Failed to fetch visitor database logs." }
-            ]);
-          });
-
-        // Clean up the URL search params so the password is not exposed in the browser bar/history
-        const cleanUrl = window.location.pathname;
-        window.history.replaceState({}, document.title, cleanUrl);
-      }
-    }
-  }, []);
-
   const executeBypassAnimation = () => {
     setIsElevating(true);
     setInput("");
