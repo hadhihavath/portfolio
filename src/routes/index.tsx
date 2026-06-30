@@ -365,17 +365,7 @@ function Projects() {
             view all 36 →
           </a>
         </div>
-        <div
-          className="grid gap-5 md:grid-cols-2 lg:grid-cols-3"
-          onMouseMove={(e) => {
-            const t = e.target as HTMLElement;
-            const card = t.closest("a");
-            if (!card) return;
-            const r = card.getBoundingClientRect();
-            card.style.setProperty("--mx", `${e.clientX - r.left}px`);
-            card.style.setProperty("--my", `${e.clientY - r.top}px`);
-          }}
-        >
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {repos.map((r, i) => (
             <ProjectCard key={r.name} repo={r} index={i} />
           ))}

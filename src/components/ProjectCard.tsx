@@ -1,4 +1,5 @@
 /* mr.havath */
+import { useRef } from "react";
 import { motion } from "framer-motion";
 import { Github, ExternalLink, Star, GitFork } from "lucide-react";
 
@@ -24,8 +25,32 @@ const langColor: Record<string, string> = {
 };
 
 export function ProjectCard({ repo, index }: { repo: Repo; index: number }) {
+  const cardRef = useRef<HTMLAnchorElement>(null);
+  const rectRef = useRef<{ left: number; top: number } | null>(null);
+
+  const handleMouseEnter = () => {
+    if (cardRef.current) {
+      const r = cardRef.current.getBoundingClientRect();
+      rectRef.current = { left: r.left, top: r.top };
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (cardRef.current && rectRef.current) {
+      const x = e.clientX - rectRef.current.left;
+      const y = e.clientY - rectRef.current.top;
+      cardRef.current.style.setProperty("--mx", `${x}px`);
+      cardRef.current.style.setProperty("--my", `${y}px`);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    rectRef.current = null;
+  };
+
   return (
     <motion.a
+      ref={cardRef}
       href={repo.url}
       target="_blank"
       rel="noreferrer"
@@ -34,6 +59,9 @@ export function ProjectCard({ repo, index }: { repo: Repo; index: number }) {
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5, delay: index * 0.05 }}
       whileHover={{ y: -6 }}
+      onMouseEnter={handleMouseEnter}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       className="group relative block overflow-hidden rounded-xl glass p-5 transition-shadow hover:neon-border"
     >
       <div className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-500 group-hover:opacity-100"
@@ -42,7 +70,7 @@ export function ProjectCard({ repo, index }: { repo: Repo; index: number }) {
            }}
       />
       <div className="relative flex flex-col gap-3">
-        <div className="flex items-start justify-between gap-3">
+         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-2">
             <Github className="size-5 text-[color:var(--neon)]" />
             <h3 className="font-mono text-lg font-semibold tracking-tight">
