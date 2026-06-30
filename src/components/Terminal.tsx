@@ -124,7 +124,7 @@ export function Terminal() {
         setInput("");
         setIsWaitingForFlag(false);
 
-        if (trimmedInput === "hadhi_hacker_flag_2026") {
+        if (trimmedInput === "system_breached_2026") {
           setHistory(newHistory);
           executeBypassAnimation();
         } else {
@@ -155,7 +155,7 @@ export function Terminal() {
         case "help":
           output = isRoot
             ? "Available commands:\n  whoami   - About Hadhi Havath\n  skills   - List technical skills and stack\n  projects - List key projects\n  contact  - Display contact channels\n  status   - Check current availability\n  ls       - List virtual directory files\n  cat      - Display file contents (e.g. cat secret_dossier.txt)\n  clear    - Clear terminal window"
-            : "Available commands:\n  whoami   - About Hadhi Havath\n  skills   - List technical skills and stack\n  projects - List key projects\n  contact  - Display contact channels\n  status   - Check current availability\n  ls       - List virtual directory files\n  cat      - Display file contents (e.g. cat flag.txt)\n  decrypt  - Decode a Base64 string (e.g. decrypt <string>)\n  clear    - Clear terminal window\n  \nHint: Try listing files with 'ls'.";
+            : "Available commands:\n  whoami   - About Hadhi Havath\n  skills   - List technical skills and stack\n  projects - List key projects\n  contact  - Display contact channels\n  status   - Check current availability\n  ls       - List virtual directory files\n  cat      - Display file contents (e.g. cat flag.txt)\n  xor      - Decode XOR hex ciphers (e.g. xor <hex> <key>)\n  clear    - Clear terminal window\n  \nHint: Try listing files with 'ls'.";
           break;
         case "whoami":
           output = `Hadhi Havath — ${profile.tagline}\n"I build it, then I secure it."`;
@@ -199,14 +199,35 @@ export function Terminal() {
             }
           }
           break;
-        case "decrypt":
+        case "xor":
           if (!arg) {
-            output = "usage: decrypt <base64_string>";
+            output = "usage: xor <hex_ciphertext> <key>";
           } else {
-            try {
-              output = `Decrypted: ${atob(arg)}`;
-            } catch {
-              output = "decrypt: failed to decode. Invalid Base64 format.";
+            const xorParts = arg.split(/\s+/);
+            const hexCipher = xorParts[0];
+            const key = xorParts[1];
+
+            if (!hexCipher || !key) {
+              output = "usage: xor <hex_ciphertext> <key>";
+            } else {
+              try {
+                if (hexCipher.length % 2 !== 0) {
+                  throw new Error("Invalid hex length");
+                }
+                let result = "";
+                for (let i = 0; i < hexCipher.length; i += 2) {
+                  const hexByte = hexCipher.substring(i, i + 2);
+                  const byteVal = parseInt(hexByte, 16);
+                  if (isNaN(byteVal)) {
+                    throw new Error("Invalid byte value");
+                  }
+                  const keyChar = key.charCodeAt((i / 2) % key.length);
+                  result += String.fromCharCode(byteVal ^ keyChar);
+                }
+                output = `Decrypted: ${result}`;
+              } catch {
+                output = "xor: decryption error. Ensure input is a valid hex string.";
+              }
             }
           }
           break;
@@ -220,7 +241,7 @@ export function Terminal() {
             
             if (subCmd === "root") {
               if (subArg) {
-                if (subArg === "hadhi_hacker_flag_2026") {
+                if (subArg === "system_breached_2026") {
                   setHistory(newHistory);
                   executeBypassAnimation();
                   return;

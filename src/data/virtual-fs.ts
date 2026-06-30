@@ -16,7 +16,7 @@ export const GUEST_FILES: Record<string, VirtualFile> = {
   },
   "flag.txt": {
     name: "flag.txt",
-    content: "[!] ACCESS DENIED: ROOT PRIVILEGES REQUIRED.\nKernel security is active. Please elevate permissions to read flag payloads.\n\nHint: Decode this Base64 token to find the root key:\n  aGFkaGlfaGFja2VyX2ZsYWdfMjAyNg==\n\nRun 'sudo root <decoded_token>' to unlock the core system."
+    content: "[!] ACCESS DENIED: SYSTEM OVERRIDE CHECKSUM FAILED.\nKernel security is active. Decryption authorization required.\n\nCiphertext: 1b18171c0c0506061a0c09020c0d0d1f53545657\nCipher Mode: XOR\nKey Location: DOM structure metadata (search for element '#ctf-key')\n\nRun 'xor <ciphertext> <key>' to decrypt the administrative flag.\nRun 'sudo root <flag>' with the decoded key to elevate privileges."
   }
 };
 

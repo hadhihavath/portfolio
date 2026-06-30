@@ -33,10 +33,12 @@ export const Route = createFileRoute("/")({
 function Index() {
   useEffect(() => {
     trackVisit();
+    console.log("🕵️‍♂️ [SecOps Diagnostics] System bypass key is embedded in DOM. Inspect element #ctf-key.");
   }, []);
 
   return (
     <main className="relative min-h-screen overflow-x-hidden">
+      <div id="ctf-key" style={{ display: "none" }} data-key="hadhi" />
       <CursorGlow />
       <ScanLine />
       <Nav />
