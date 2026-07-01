@@ -64,18 +64,18 @@ export function ProjectCard({ repo, index }: { repo: Repo; index: number }) {
       onMouseLeave={handleMouseLeave}
       className="group relative block overflow-hidden rounded-xl glass p-5 transition-shadow hover:neon-border"
     >
-      <div className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-           style={{
-             background: "radial-gradient(400px circle at var(--mx,50%) var(--my,50%), color-mix(in oklab, var(--neon) 18%, transparent), transparent 60%)",
-           }}
+      <div
+        className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+        style={{
+          background:
+            "radial-gradient(400px circle at var(--mx,50%) var(--my,50%), color-mix(in oklab, var(--neon) 18%, transparent), transparent 60%)",
+        }}
       />
       <div className="relative flex flex-col gap-3">
-         <div className="flex items-start justify-between gap-3">
+        <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-2">
             <Github className="size-5 text-[color:var(--neon)]" />
-            <h3 className="font-mono text-lg font-semibold tracking-tight">
-              {repo.name}
-            </h3>
+            <h3 className="font-mono text-lg font-semibold tracking-tight">{repo.name}</h3>
           </div>
           <ExternalLink className="size-4 text-muted-foreground transition-colors group-hover:text-[color:var(--neon)]" />
         </div>
@@ -92,8 +92,14 @@ export function ProjectCard({ repo, index }: { repo: Repo; index: number }) {
               {repo.language}
             </span>
           )}
-          <span className="flex items-center gap-1"><Star className="size-3.5" />{repo.stars}</span>
-          <span className="flex items-center gap-1"><GitFork className="size-3.5" />{repo.forks}</span>
+          <span className="flex items-center gap-1">
+            <Star className="size-3.5" />
+            {repo.stars}
+          </span>
+          <span className="flex items-center gap-1">
+            <GitFork className="size-3.5" />
+            {repo.forks}
+          </span>
         </div>
       </div>
     </motion.a>

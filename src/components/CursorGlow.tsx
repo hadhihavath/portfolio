@@ -36,7 +36,8 @@ export function CursorGlow() {
       aria-hidden
       className="pointer-events-none fixed inset-0 z-50 mix-blend-screen"
       style={{
-        background: "radial-gradient(400px circle at -200px -200px, color-mix(in oklab, var(--neon) 18%, transparent), transparent 60%)",
+        background:
+          "radial-gradient(400px circle at -200px -200px, color-mix(in oklab, var(--neon) 18%, transparent), transparent 60%)",
         transition: "background 80ms linear",
       }}
     />

@@ -13,11 +13,17 @@ type HistoryItem = {
 export function Terminal() {
   const [history, setHistory] = useState<HistoryItem[]>([
     { type: "input", prompt: "guest@hadhi:~$", text: "whoami" },
-    { type: "output", text: "hadhi havath — full stack dev · ethical hacker · ai/ml researcher\nSpecializing in Python, Django, application security, and AI integrations." },
+    {
+      type: "output",
+      text: "hadhi havath — full stack dev · ethical hacker · ai/ml researcher\nSpecializing in Python, Django, application security, and AI integrations.",
+    },
     { type: "input", prompt: "guest@hadhi:~$", text: "help" },
-    { type: "output", text: "Available commands:\n  whoami   - About Hadhi Havath\n  skills   - List technical skills and stack\n  projects - List key projects\n  contact  - Display contact channels\n  status   - Check current availability\n  ls       - List virtual directory files\n  cat      - Display file contents\n  clear    - Clear terminal window\n  \nHint: Try listing directory files using 'ls'." }
+    {
+      type: "output",
+      text: "Available commands:\n  whoami   - About Hadhi Havath\n  skills   - List technical skills and stack\n  projects - List key projects\n  contact  - Display contact channels\n  status   - Check current availability\n  ls       - List virtual directory files\n  cat      - Display file contents\n  clear    - Clear terminal window\n  \nHint: Try listing directory files using 'ls'.",
+    },
   ]);
-  
+
   const [input, setInput] = useState("");
   const [isRoot, setIsRoot] = useState(false);
   const [isWaitingForPassword, setIsWaitingForPassword] = useState(false);
@@ -41,7 +47,10 @@ export function Terminal() {
       { text: "[+] INJECTING SHELLCODE (Buffer Overflow exploit)...", delay: 800 },
       { text: "[+] ELEVATING PRIVILEGES (SetUID validation bypass)...", delay: 1400 },
       { text: "[+] SECURITY CONTEXT: root@hadhi:~#", delay: 2000 },
-      { text: "\n[SUCCESS] ROOT SHELL UNLOCKED!\n\nType 'ls' to see unlocked administrative files.\nType 'cat resume.pdf' to view credentials.", delay: 2600 }
+      {
+        text: "\n[SUCCESS] ROOT SHELL UNLOCKED!\n\nType 'ls' to see unlocked administrative files.\nType 'cat resume.pdf' to view credentials.",
+        delay: 2600,
+      },
     ];
 
     steps.forEach((step, index) => {
@@ -60,19 +69,22 @@ export function Terminal() {
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       const trimmedInput = input.trim();
-      
+
       // 1. Password input for Visitor Logs
       if (isWaitingForPassword) {
         const correctPassword = import.meta.env.VITE_ANALYTICS_PASSWORD || "mrhavath";
         const newHistory = [
           ...history,
-          { type: "input" as const, prompt: "Password: ", text: "********" }
+          { type: "input" as const, prompt: "Password: ", text: "********" },
         ];
 
         if (trimmedInput === correctPassword) {
           setHistory([
             ...newHistory,
-            { type: "output", text: "Authenticating...\nAccess granted.\n\nFetching visitor logs..." }
+            {
+              type: "output",
+              text: "Authenticating...\nAccess granted.\n\nFetching visitor logs...",
+            },
           ]);
           setInput("");
           setIsWaitingForPassword(false);
@@ -82,11 +94,16 @@ export function Terminal() {
             if (logs.length === 0) {
               setHistory((prev) => [
                 ...prev,
-                { type: "output", text: "No visitor logs found. Connect Supabase to track global traffic." }
+                {
+                  type: "output",
+                  text: "No visitor logs found. Connect Supabase to track global traffic.",
+                },
               ]);
             } else {
-              let logTable = "IP Address      | Location                       | Device          | Date & Time\n";
-              logTable += "----------------|--------------------------------|-----------------|---------------------\n";
+              let logTable =
+                "IP Address      | Location                       | Device          | Date & Time\n";
+              logTable +=
+                "----------------|--------------------------------|-----------------|---------------------\n";
 
               logs.forEach((log) => {
                 const date = new Date(log.created_at).toLocaleString();
@@ -101,13 +118,13 @@ export function Terminal() {
           } catch (err) {
             setHistory((prev) => [
               ...prev,
-              { type: "output", text: "Error: Failed to fetch visitor database logs." }
+              { type: "output", text: "Error: Failed to fetch visitor database logs." },
             ]);
           }
         } else {
           setHistory([
             ...newHistory,
-            { type: "output", text: "Access denied: Invalid credentials." }
+            { type: "output", text: "Access denied: Invalid credentials." },
           ]);
           setInput("");
           setIsWaitingForPassword(false);
@@ -119,7 +136,7 @@ export function Terminal() {
       if (isWaitingForFlag) {
         const newHistory = [
           ...history,
-          { type: "input" as const, prompt: "Root Key: ", text: "********" }
+          { type: "input" as const, prompt: "Root Key: ", text: "********" },
         ];
         setInput("");
         setIsWaitingForFlag(false);
@@ -130,7 +147,7 @@ export function Terminal() {
         } else {
           setHistory([
             ...newHistory,
-            { type: "output", text: "Access denied: Invalid privilege key payload." }
+            { type: "output", text: "Access denied: Invalid privilege key payload." },
           ]);
         }
         return;
@@ -138,8 +155,11 @@ export function Terminal() {
 
       // 3. Normal command processing
       const currentPrompt = isRoot ? "root@hadhi:~#" : "guest@hadhi:~$";
-      const newHistory = [...history, { type: "input" as const, prompt: currentPrompt, text: trimmedInput }];
-      
+      const newHistory = [
+        ...history,
+        { type: "input" as const, prompt: currentPrompt, text: trimmedInput },
+      ];
+
       if (trimmedInput === "") {
         setHistory(newHistory);
         setInput("");
@@ -164,10 +184,13 @@ export function Terminal() {
           output = `Technical Stack:\n  ${stack.join(" · ")}`;
           break;
         case "projects":
-          output = `Recent Projects:\n` + repos.map(r => `  - ${r.name}: ${r.description} (${r.url})`).join("\n");
+          output =
+            `Recent Projects:\n` +
+            repos.map((r) => `  - ${r.name}: ${r.description} (${r.url})`).join("\n");
           break;
         case "contact":
-          output = "Contact Channels:\n  - Email: mrhavath@gmail.com\n  - WhatsApp: +919207659510\n  - Instagram: instagram.com/mr.havath\n  - GitHub: github.com/hadhihavath";
+          output =
+            "Contact Channels:\n  - Email: mrhavath@gmail.com\n  - WhatsApp: +919207659510\n  - Instagram: instagram.com/mr.havath\n  - GitHub: github.com/hadhihavath";
           break;
         case "status":
           output = `Status Check:\n  - [OK] Active & Online\n  - Availability: Freelance, Full-time & Security Audits\n  - Location: World-wide (Remote friendly)`;
@@ -238,7 +261,7 @@ export function Terminal() {
             const subParts = arg.split(/\s+/);
             const subCmd = subParts[0].toLowerCase();
             const subArg = subParts.slice(1).join(" ");
-            
+
             if (subCmd === "root") {
               if (subArg) {
                 if (subArg === "system_breached_2026") {
@@ -274,7 +297,7 @@ export function Terminal() {
           output = `command not found: ${trimmedInput}. Type 'help' for available commands.`;
           break;
       }
-      
+
       setHistory([...newHistory, { type: "output", text: output }]);
       setInput("");
     }
@@ -285,26 +308,28 @@ export function Terminal() {
   };
 
   return (
-    <div 
+    <div
       onClick={handleContainerClick}
       className={`glass rounded-lg p-4 font-mono text-sm md:text-base border shadow-lg cursor-text transition-all duration-500 ${
-        isRoot 
-          ? "border-red-500/50 shadow-[0_0_25px_rgba(239,68,68,0.25)]" 
-          : "border-border/50"
+        isRoot ? "border-red-500/50 shadow-[0_0_25px_rgba(239,68,68,0.25)]" : "border-border/50"
       }`}
     >
       {/* Terminal Title Bar */}
       <div className="mb-3 flex items-center gap-2 border-b border-border/30 pb-2 select-none">
-        <span className={`size-3 rounded-full ${isRoot ? "bg-red-500 animate-pulse" : "bg-red-500/80"}`} />
+        <span
+          className={`size-3 rounded-full ${isRoot ? "bg-red-500 animate-pulse" : "bg-red-500/80"}`}
+        />
         <span className="size-3 rounded-full bg-yellow-500/80" />
         <span className="size-3 rounded-full bg-green-500/80" />
         <span className="ml-2 text-xs text-muted-foreground">
-          {isRoot ? "root@hadhi: ~ (administrative shell)" : "guest@hadhi: ~ (interactive terminal)"}
+          {isRoot
+            ? "root@hadhi: ~ (administrative shell)"
+            : "guest@hadhi: ~ (interactive terminal)"}
         </span>
       </div>
 
       {/* Terminal Screen Content */}
-      <div 
+      <div
         ref={containerRef}
         className="max-h-72 overflow-y-auto space-y-2 pr-2 scrollbar-thin scrollbar-thumb-border"
       >
@@ -320,17 +345,17 @@ export function Terminal() {
             )}
           </div>
         ))}
-        
+
         {/* Active Input Line */}
         {!isElevating && (
           <div className="flex items-center gap-2">
             <span className="text-[color:var(--neon)] select-none">
-              {isWaitingForPassword 
-                ? "Password: " 
-                : isWaitingForFlag 
-                  ? "Root Key: " 
-                  : isRoot 
-                    ? "root@hadhi:~#" 
+              {isWaitingForPassword
+                ? "Password: "
+                : isWaitingForFlag
+                  ? "Root Key: "
+                  : isRoot
+                    ? "root@hadhi:~#"
                     : "guest@hadhi:~$"}
             </span>
             <input

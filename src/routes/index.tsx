@@ -3,9 +3,18 @@ import { createFileRoute } from "@tanstack/react-router";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useEffect } from "react";
 import {
-  Github, Mail, MapPin, Sparkles, Shield, Cpu, Code2,
-  ArrowUpRight, Terminal as TerminalIcon, Zap,
-  Instagram, MessageCircle,
+  Github,
+  Mail,
+  MapPin,
+  Sparkles,
+  Shield,
+  Cpu,
+  Code2,
+  ArrowUpRight,
+  Terminal as TerminalIcon,
+  Zap,
+  Instagram,
+  MessageCircle,
 } from "lucide-react";
 import { CursorGlow } from "@/components/CursorGlow";
 import { MatrixRain } from "@/components/MatrixRain";
@@ -18,9 +27,16 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Hadhi Havath — Full Stack Dev · Ethical Hacker · AI/ML" },
-      { name: "description", content: "Portfolio of Hadhi Havath — Python & Django full-stack developer, ethical hacker and AI/ML researcher. I build it, then I secure it." },
+      {
+        name: "description",
+        content:
+          "Portfolio of Hadhi Havath — Python & Django full-stack developer, ethical hacker and AI/ML researcher. I build it, then I secure it.",
+      },
       { property: "og:title", content: "Hadhi Havath — Builder & Breaker" },
-      { property: "og:description", content: "Full Stack Developer · Ethical Hacking · AI/ML Researcher. Open to work." },
+      {
+        property: "og:description",
+        content: "Full Stack Developer · Ethical Hacking · AI/ML Researcher. Open to work.",
+      },
       { property: "og:image", content: profile.avatar },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -33,7 +49,9 @@ export const Route = createFileRoute("/")({
 function Index() {
   useEffect(() => {
     trackVisit();
-    console.log("🕵️‍♂️ [SecOps Diagnostics] System bypass key is embedded in DOM. Inspect element #ctf-key.");
+    console.log(
+      "🕵️‍♂️ [SecOps Diagnostics] System bypass key is embedded in DOM. Inspect element #ctf-key.",
+    );
   }, []);
 
   return (
@@ -59,7 +77,8 @@ function ScanLine() {
       <div
         className="absolute left-0 right-0 h-px animate-scan"
         style={{
-          background: "linear-gradient(90deg, transparent, color-mix(in oklab, var(--neon) 70%, transparent), transparent)",
+          background:
+            "linear-gradient(90deg, transparent, color-mix(in oklab, var(--neon) 70%, transparent), transparent)",
           boxShadow: "0 0 20px color-mix(in oklab, var(--neon) 60%, transparent)",
         }}
       />
@@ -83,7 +102,11 @@ function Nav() {
         </a>
         <nav className="hidden gap-6 md:flex">
           {links.map((l) => (
-            <a key={l.href} href={l.href} className="story-link text-sm text-muted-foreground transition-colors hover:text-foreground">
+            <a
+              key={l.href}
+              href={l.href}
+              className="story-link text-sm text-muted-foreground transition-colors hover:text-foreground"
+            >
               {l.label}
             </a>
           ))}
@@ -110,14 +133,21 @@ function Hero() {
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   return (
-    <section id="top" ref={ref} className="relative flex min-h-screen items-center justify-center px-6 pt-28">
+    <section
+      id="top"
+      ref={ref}
+      className="relative flex min-h-screen items-center justify-center px-6 pt-28"
+    >
       <div className="absolute inset-0 grid-bg" />
       <div className="absolute inset-0 overflow-hidden">
         <MatrixRain />
       </div>
       {/* floating orbs */}
       <div className="pointer-events-none absolute left-10 top-32 size-72 rounded-full bg-[color:var(--neon)]/20 blur-[100px] animate-float" />
-      <div className="pointer-events-none absolute right-10 bottom-20 size-96 rounded-full bg-[color:var(--neon-2)]/20 blur-[120px] animate-float" style={{ animationDelay: "-3s" }} />
+      <div
+        className="pointer-events-none absolute right-10 bottom-20 size-96 rounded-full bg-[color:var(--neon-2)]/20 blur-[120px] animate-float"
+        style={{ animationDelay: "-3s" }}
+      />
 
       <motion.div style={{ y, opacity }} className="relative z-10 mx-auto max-w-5xl text-center">
         <motion.div
@@ -142,7 +172,8 @@ function Hero() {
           <span
             className="animate-gradient bg-clip-text text-transparent"
             style={{
-              backgroundImage: "linear-gradient(90deg, var(--neon), var(--neon-3), var(--neon-2), var(--neon))",
+              backgroundImage:
+                "linear-gradient(90deg, var(--neon), var(--neon-3), var(--neon-2), var(--neon))",
             }}
           >
             then I secure it.
@@ -155,9 +186,9 @@ function Hero() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="mx-auto mt-7 max-w-2xl text-base text-muted-foreground md:text-lg"
         >
-          I'm <span className="text-foreground">Hadhi Havath</span> — full-stack engineer in
-          Python & Django, ethical hacker, and AI/ML researcher.
-          Shipping code by day, breaking it by night.
+          I'm <span className="text-foreground">Hadhi Havath</span> — full-stack engineer in Python
+          & Django, ethical hacker, and AI/ML researcher. Shipping code by day, breaking it by
+          night.
         </motion.p>
 
         <motion.div
@@ -198,13 +229,27 @@ function Hero() {
 }
 
 function Marquee() {
-  const items = ["python", "django", "ai / ml", "ethical hacking", "owasp", "linux", "typescript", "react", "penetration testing", "automation"];
+  const items = [
+    "python",
+    "django",
+    "ai / ml",
+    "ethical hacking",
+    "owasp",
+    "linux",
+    "typescript",
+    "react",
+    "penetration testing",
+    "automation",
+  ];
   const row = [...items, ...items];
   return (
     <section className="relative overflow-hidden border-y border-border bg-black/20 py-6">
       <div className="flex animate-marquee whitespace-nowrap">
         {row.map((it, i) => (
-          <span key={i} className="mx-8 flex items-center gap-8 font-mono text-2xl uppercase tracking-widest text-muted-foreground md:text-3xl">
+          <span
+            key={i}
+            className="mx-8 flex items-center gap-8 font-mono text-2xl uppercase tracking-widest text-muted-foreground md:text-3xl"
+          >
             {it}
             <span className="text-[color:var(--neon)]">✦</span>
           </span>
@@ -221,9 +266,7 @@ function SectionHeading({ kicker, title, sub }: { kicker: string; title: string;
         <span className="h-px w-8 bg-[color:var(--neon)]" />
         {kicker}
       </div>
-      <h2 className="font-display text-4xl font-bold tracking-tight md:text-5xl">
-        {title}
-      </h2>
+      <h2 className="font-display text-4xl font-bold tracking-tight md:text-5xl">{title}</h2>
       {sub && <p className="mt-4 text-muted-foreground">{sub}</p>}
     </div>
   );
@@ -283,22 +326,28 @@ function About() {
           >
             <div className="space-y-5 text-lg leading-relaxed text-muted-foreground">
               <p>
-                I'm a full-stack developer who treats <span className="text-foreground">security as a feature</span>, not a checklist.
-                Most of my product work lives in Python and Django; my research lives in lab notebooks
-                and shell scripts.
+                I'm a full-stack developer who treats{" "}
+                <span className="text-foreground">security as a feature</span>, not a checklist.
+                Most of my product work lives in Python and Django; my research lives in lab
+                notebooks and shell scripts.
               </p>
               <p>
-                Lately I've been building AI-assisted tooling — assistants, content detectors,
-                OCR pipelines — and auditing the network layer around them. I like products that have a
+                Lately I've been building AI-assisted tooling — assistants, content detectors, OCR
+                pipelines — and auditing the network layer around them. I like products that have a
                 <span className="text-foreground"> sharp edge</span> and a clean back of house.
               </p>
             </div>
             <div className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-4">
               {stats.map((s) => (
-                <div key={s.label} className="glass rounded-xl p-4 transition-all hover:neon-border">
+                <div
+                  key={s.label}
+                  className="glass rounded-xl p-4 transition-all hover:neon-border"
+                >
                   <s.icon className="mb-2 size-5 text-[color:var(--neon)]" />
                   <div className="font-mono text-xl font-semibold">{s.value}</div>
-                  <div className="text-xs uppercase tracking-wider text-muted-foreground">{s.label}</div>
+                  <div className="text-xs uppercase tracking-wider text-muted-foreground">
+                    {s.label}
+                  </div>
                 </div>
               ))}
             </div>
@@ -394,8 +443,8 @@ function Contact() {
               Let's <span className="glow-text-magenta">ship something</span> together.
             </h2>
             <p className="mx-auto mt-5 max-w-xl text-muted-foreground">
-              I'm open to full-time roles, freelance builds, and security audits.
-              Get in touch via any of the channels below.
+              I'm open to full-time roles, freelance builds, and security audits. Get in touch via
+              any of the channels below.
             </p>
             <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
               <a
@@ -434,8 +483,12 @@ function Contact() {
               </a>
             </div>
             <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-mono text-xs text-muted-foreground">
-              <span className="flex items-center gap-1.5"><MapPin className="size-3.5" /> remote · worldwide</span>
-              <span className="flex items-center gap-1.5"><Zap className="size-3.5 text-[color:var(--neon)]" /> typically replies within 24h</span>
+              <span className="flex items-center gap-1.5">
+                <MapPin className="size-3.5" /> remote · worldwide
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Zap className="size-3.5 text-[color:var(--neon)]" /> typically replies within 24h
+              </span>
             </div>
           </div>
         </motion.div>

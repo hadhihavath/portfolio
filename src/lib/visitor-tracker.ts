@@ -46,13 +46,17 @@ export async function trackVisit(): Promise<void> {
     // 1. Gather location and IP from a free service
     let ip = "127.0.0.1";
     let location = "Localhost";
-    
+
     try {
       const geoRes = await fetch("https://ipapi.co/json/");
       if (geoRes.ok) {
         const geoData = await geoRes.json();
         ip = geoData.ip || "Unknown IP";
-        location = `${geoData.city || ""}, ${geoData.region || ""}, ${geoData.country_name || ""}`.replace(/^,\s*|,\s*$/, "");
+        location =
+          `${geoData.city || ""}, ${geoData.region || ""}, ${geoData.country_name || ""}`.replace(
+            /^,\s*|,\s*$/,
+            "",
+          );
         if (!location.trim()) location = "Unknown Location";
       }
     } catch {
@@ -80,21 +84,23 @@ export async function trackVisit(): Promise<void> {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "apikey": supabaseAnonKey,
-          "Authorization": `Bearer ${supabaseAnonKey}`,
-          "Prefer": "return=minimal"
+          apikey: supabaseAnonKey,
+          Authorization: `Bearer ${supabaseAnonKey}`,
+          Prefer: "return=minimal",
         },
         body: JSON.stringify({
           ip: log.ip,
           location: log.location,
           device: log.device,
           referrer: log.referrer,
-          screen_resolution: log.screen_resolution
-        })
+          screen_resolution: log.screen_resolution,
+        }),
       });
     } else {
       // Save locally to localStorage as fallback/demo
-      const existingLogs: VisitorLog[] = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || "[]");
+      const existingLogs: VisitorLog[] = JSON.parse(
+        localStorage.getItem(LOCAL_STORAGE_KEY) || "[]",
+      );
       existingLogs.unshift(log);
       // Keep only last 50 logs locally to save space
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(existingLogs.slice(0, 50)));
@@ -110,13 +116,16 @@ export async function fetchVisitorLogs(): Promise<VisitorLog[]> {
 
   if (supabaseUrl && supabaseAnonKey) {
     try {
-      const res = await fetch(`${supabaseUrl}/rest/v1/visitor_logs?select=*&order=created_at.desc&limit=50`, {
-        method: "GET",
-        headers: {
-          "apikey": supabaseAnonKey,
-          "Authorization": `Bearer ${supabaseAnonKey}`,
-        }
-      });
+      const res = await fetch(
+        `${supabaseUrl}/rest/v1/visitor_logs?select=*&order=created_at.desc&limit=50`,
+        {
+          method: "GET",
+          headers: {
+            apikey: supabaseAnonKey,
+            Authorization: `Bearer ${supabaseAnonKey}`,
+          },
+        },
+      );
       if (res.ok) {
         return await res.json();
       }

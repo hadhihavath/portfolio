@@ -21,10 +21,10 @@ declare global {
 
 export function reportError(error: unknown, context: Record<string, unknown> = {}) {
   if (typeof window === "undefined") return;
-  
+
   // Also log to console for development visibility
   console.error("Captured error:", error, context);
-  
+
   window.__appEvents?.captureException?.(
     error,
     {

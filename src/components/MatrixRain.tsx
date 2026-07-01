@@ -7,7 +7,7 @@ export function MatrixRain() {
     const canvas = ref.current!;
     const ctx = canvas.getContext("2d")!;
     let raf = 0;
-    
+
     const chars = "01ハドアク#@$%abcdef</>HACK".split("");
     const fontSize = 14;
     let cols = 0;
@@ -19,7 +19,7 @@ export function MatrixRain() {
       cols = Math.floor(canvas.width / fontSize);
       drops = new Array(cols).fill(1);
     };
-    
+
     resize();
     window.addEventListener("resize", resize);
 
@@ -28,7 +28,7 @@ export function MatrixRain() {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = "#5cffb0";
       ctx.font = `${fontSize}px JetBrains Mono, monospace`;
-      
+
       for (let i = 0; i < cols; i++) {
         const text = chars[Math.floor(Math.random() * chars.length)];
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
@@ -47,11 +47,5 @@ export function MatrixRain() {
     };
   }, []);
 
-  return (
-    <canvas
-      ref={ref}
-      className="absolute inset-0 h-full w-full opacity-25"
-      aria-hidden
-    />
-  );
+  return <canvas ref={ref} className="absolute inset-0 h-full w-full opacity-25" aria-hidden />;
 }

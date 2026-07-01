@@ -12,8 +12,8 @@ import { useEffect, type ReactNode } from "react";
 import Lenis from "lenis";
 
 import appCss from "../styles.css?url";
-import faviconSvg from "../assets/favicon.svg?url";
-import faviconPng from "../assets/favicon.png?url";
+import faviconSvg from "../../assets/favicon.svg?url";
+import faviconPng from "../../assets/favicon.png?url";
 import { reportError } from "../lib/error-reporting";
 
 function NotFoundComponent() {
