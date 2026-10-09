@@ -1,0 +1,17 @@
+# Allow all search engines and web crawlers
+User-agent: *
+Allow: /
+
+# Directives for major search engine crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+# Sitemap locations
+Sitemap: https://hadhihavath.in/sitemap.xml
+Sitemap: https://hadhihavath.github.io/portfolio/sitemap.xml
