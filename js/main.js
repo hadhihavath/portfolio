@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initClipboardHelpers();
   initMobileNav();
   initScrollSpy();
+  initHeroAvatarSwitcher();
+  initSecurityShield();
 });
 
 /* ============================================================
@@ -415,7 +417,8 @@ function showToast(message) {
     document.body.appendChild(toast);
   }
 
-  toast.innerHTML = `<span style="color:var(--primary);">✓</span> <span>${message}</span>`;
+  const icon = (message.startsWith('🔒') || message.startsWith('⚠️')) ? '' : '<span style="color:var(--primary);">✓</span> ';
+  toast.innerHTML = `${icon}<span>${message}</span>`;
   toast.classList.add('show');
 
   setTimeout(() => {
@@ -474,4 +477,88 @@ function initScrollSpy() {
       }
     });
   });
+}
+
+/* ============================================================
+   9. HERO AVATAR PHOTO SWITCHER
+   ============================================================ */
+function initHeroAvatarSwitcher() {
+  const switcherDots = document.querySelectorAll('.avatar-photo-switcher .switcher-dot');
+  const avatarImages = document.querySelectorAll('#hero-avatar-frame .avatar-image');
+
+  if (!switcherDots.length || !avatarImages.length) return;
+
+  switcherDots.forEach(dot => {
+    dot.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const targetId = dot.getAttribute('data-target');
+      
+      switcherDots.forEach(d => d.classList.remove('active'));
+      dot.classList.add('active');
+
+      avatarImages.forEach(img => {
+        if (img.getAttribute('data-photo') === targetId) {
+          img.classList.add('active');
+        } else {
+          img.classList.remove('active');
+        }
+      });
+    });
+  });
+}
+
+/* ============================================================
+   10. CLIENT-SIDE INSPECTION DETERRENTS & SECURITY SHIELD
+   ============================================================ */
+function initSecurityShield() {
+  // 1. Right-Click Context Menu Prevention with Cyber Feedback
+  document.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    showToast('🔒 Source Code Protected — Muhammed Hadhi Havath');
+  });
+
+  // 2. Keyboard Shortcuts Deterrent (DevTools & Source view shortcuts)
+  document.addEventListener('keydown', (e) => {
+    // F12 key
+    if (e.key === 'F12' || e.keyCode === 123) {
+      e.preventDefault();
+      showToast('⚠️ Developer Inspection Tools Disabled.');
+      return false;
+    }
+    // Ctrl+Shift+I (Inspect), Ctrl+Shift+J (Console), Ctrl+Shift+C (Inspect Element)
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['I', 'i', 'J', 'j', 'C', 'c'].includes(e.key)) {
+      e.preventDefault();
+      showToast('⚠️ Inspection shortcuts disabled.');
+      return false;
+    }
+    // Ctrl+U (View Page Source)
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'U' || e.key === 'u')) {
+      e.preventDefault();
+      showToast('🔒 Direct source viewing disabled.');
+      return false;
+    }
+    // Ctrl+S (Save Page)
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'S' || e.key === 's')) {
+      e.preventDefault();
+      showToast('🔒 Page saving disabled.');
+      return false;
+    }
+  });
+
+  // 3. Image Drag Protection
+  document.addEventListener('dragstart', (e) => {
+    if (e.target && e.target.nodeName === 'IMG') {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  // 4. Developer Console Cyber Security Banner
+  const bannerTitle = 'color:#10b981; font-size:18px; font-weight:800; text-shadow:0 0 10px rgba(16,185,129,0.5); font-family:monospace;';
+  const bannerWarning = 'color:#f59e0b; font-size:13px; font-weight:bold; font-family:monospace;';
+  const bannerBody = 'color:#94a3b8; font-size:12px; line-height:1.6; font-family:sans-serif;';
+
+  console.log('%c🛡️ HADHI HAVATH // SECURITY AUDITING & CODEBASE SHIELD', bannerTitle);
+  console.log('%c[WARNING] Unauthorized copying, scraping, or redistribution of this software portfolio is prohibited.', bannerWarning);
+  console.log('%cIdentity: Muhammed Hadhi Havath (Hadhi Havath / Havath)\nInquiries & Verification: mrhavath@gmail.com\nTerminal shell emulator and CTF challenges are active in the console section.', bannerBody);
 }

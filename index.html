@@ -297,8 +297,15 @@
               <span>Clean Codebase Architecture</span>
             </div>
 
-            <div class="avatar-frame">
-              <img src="assets/images/hadhihavath.jpg" alt="Muhammed Hadhi Havath — Software Engineer" class="avatar-image">
+            <div class="avatar-frame" id="hero-avatar-frame">
+              <img src="assets/images/hadhihavath.jpg" alt="Muhammed Hadhi Havath — Software Engineer" class="avatar-image active" id="hero-avatar-img-1" data-photo="1">
+              <img src="assets/images/havath.jpg" alt="Muhammed Hadhi Havath — Systems Engineer" class="avatar-image" id="hero-avatar-img-2" data-photo="2">
+              
+              <div class="avatar-photo-switcher" title="Switch Avatar Portrait">
+                <button type="button" class="switcher-dot active" data-target="1" aria-label="Portrait 1">1</button>
+                <button type="button" class="switcher-dot" data-target="2" aria-label="Portrait 2">2</button>
+              </div>
+
               <div class="avatar-overlay-badge">
                 <div>
                   <div class="badge-title">Muhammed Hadhi Havath</div>
@@ -356,53 +363,88 @@
         </div>
 
         <div class="about-grid">
-          <div class="glass-card about-card">
-            <p class="about-paragraph">
-              I am <strong>Muhammed Hadhi Havath</strong> (frequently credited as <strong>Hadhi Havath</strong> or <strong>Havath</strong>), a passionate Full Stack Developer and Systems Engineer from Calicut, Kerala, India. I completed my <strong>Bachelor of Computer Application (BCA)</strong> from the <strong>University of Calicut</strong>, cultivating a strong grounding in algorithms, database design, and systems engineering.
-            </p>
-            <p class="about-paragraph">
-              Over the last half-decade of hands-on software development, my focus has gravitated toward <strong>Python & Django</strong> web frameworks, modern <strong>TypeScript/JavaScript</strong> user interfaces, and cross-platform mobile apps built with <strong>Flutter</strong>.
-            </p>
-            <div class="highlight-box">
-              "Great software isn't just about shipping features fast—it is about architectural purity, deterministic behavior under load, and zero tolerance for security oversights."
+          <!-- Visual Portrait Card featuring havath.jpg -->
+          <div class="about-visual-card">
+            <div class="about-image-frame">
+              <img src="assets/images/havath.jpg" alt="Muhammed Hadhi Havath — Software Engineer" class="about-image" loading="lazy">
+              <div class="about-image-overlay">
+                <div class="about-image-badge">
+                  <span class="status-indicator"></span>
+                  <span>Verified Architect</span>
+                </div>
+                <div class="about-image-caption">
+                  <div class="caption-title">Muhammed Hadhi Havath</div>
+                  <div class="caption-subtitle">Hadhi Havath · Havath · mr.havath</div>
+                </div>
+              </div>
             </div>
-            <p class="about-paragraph">
-              Beyond product engineering, I actively conduct <strong>systems auditing</strong> and security reviews, examining web integrations, APIs, and access control models against OWASP standards to ensure high reliability.
-            </p>
+
+            <div class="about-portrait-stats">
+              <div class="portrait-stat-item">
+                <span class="stat-mini-num">5+</span>
+                <span class="stat-mini-txt">Years Exp</span>
+              </div>
+              <div class="portrait-stat-item">
+                <span class="stat-mini-num">BCA</span>
+                <span class="stat-mini-txt">Calicut Univ</span>
+              </div>
+              <div class="portrait-stat-item">
+                <span class="stat-mini-num">40+</span>
+                <span class="stat-mini-txt">Repos</span>
+              </div>
+            </div>
           </div>
 
-          <div class="glass-card about-card">
-            <h3 style="font-size:1.3rem;">Engineering Specifications</h3>
-            <div class="about-specs-list">
-              <div class="spec-item">
-                <span class="spec-label">Full Name</span>
-                <span class="spec-val">Muhammed Hadhi Havath</span>
+          <!-- Narrative Bio & Technical Specifications Column -->
+          <div class="about-content-column">
+            <div class="glass-card about-card">
+              <p class="about-paragraph">
+                I am <strong>Muhammed Hadhi Havath</strong> (frequently credited as <strong>Hadhi Havath</strong> or <strong>Havath</strong>), a passionate Full Stack Developer and Systems Engineer from Calicut, Kerala, India. I completed my <strong>Bachelor of Computer Application (BCA)</strong> from the <strong>University of Calicut</strong>, cultivating a strong grounding in algorithms, database design, and systems engineering.
+              </p>
+              <p class="about-paragraph">
+                Over the last half-decade of hands-on software development, my focus has gravitated toward <strong>Python & Django</strong> web frameworks, modern <strong>TypeScript/JavaScript</strong> user interfaces, and cross-platform mobile apps built with <strong>Flutter</strong>.
+              </p>
+              <div class="highlight-box">
+                "Great software isn't just about shipping features fast—it is about architectural purity, deterministic behavior under load, and zero tolerance for security oversights."
               </div>
-              <div class="spec-item">
-                <span class="spec-label">Common Aliases</span>
-                <span class="spec-val">Hadhi Havath / Havath</span>
-              </div>
-              <div class="spec-item">
-                <span class="spec-label">Primary Stack</span>
-                <span class="spec-val">Python, Django, Flutter</span>
-              </div>
-              <div class="spec-item">
-                <span class="spec-label">Degree</span>
-                <span class="spec-val">BCA, Calicut University</span>
-              </div>
-              <div class="spec-item">
-                <span class="spec-label">Location</span>
-                <span class="spec-val">Calicut, Kerala, India</span>
-              </div>
-              <div class="spec-item">
-                <span class="spec-label">Work Status</span>
-                <span class="spec-val" style="color:var(--primary);">Open to Work / Freelance</span>
-              </div>
+              <p class="about-paragraph">
+                Beyond product engineering, I actively conduct <strong>systems auditing</strong> and security reviews, examining web integrations, APIs, and access control models against OWASP standards to ensure high reliability.
+              </p>
             </div>
 
-            <div style="margin-top:1rem; display:flex; gap:0.75rem; flex-wrap:wrap;">
-              <a href="#contact" class="btn btn-primary">Hire Hadhi Havath</a>
-              <button class="btn btn-secondary copy-trigger" data-copy="mrhavath@gmail.com">Copy Email Address</button>
+            <div class="glass-card about-card">
+              <h3 style="font-size:1.3rem;">Engineering Specifications</h3>
+              <div class="about-specs-list">
+                <div class="spec-item">
+                  <span class="spec-label">Full Name</span>
+                  <span class="spec-val">Muhammed Hadhi Havath</span>
+                </div>
+                <div class="spec-item">
+                  <span class="spec-label">Common Aliases</span>
+                  <span class="spec-val">Hadhi Havath / Havath</span>
+                </div>
+                <div class="spec-item">
+                  <span class="spec-label">Primary Stack</span>
+                  <span class="spec-val">Python, Django, Flutter</span>
+                </div>
+                <div class="spec-item">
+                  <span class="spec-label">Degree</span>
+                  <span class="spec-val">BCA, Calicut University</span>
+                </div>
+                <div class="spec-item">
+                  <span class="spec-label">Location</span>
+                  <span class="spec-val">Calicut, Kerala, India</span>
+                </div>
+                <div class="spec-item">
+                  <span class="spec-label">Work Status</span>
+                  <span class="spec-val" style="color:var(--primary);">Open to Work / Freelance</span>
+                </div>
+              </div>
+
+              <div style="margin-top:1rem; display:flex; gap:0.75rem; flex-wrap:wrap;">
+                <a href="#contact" class="btn btn-primary">Hire Hadhi Havath</a>
+                <button class="btn btn-secondary copy-trigger" data-copy="mrhavath@gmail.com">Copy Email Address</button>
+              </div>
             </div>
           </div>
         </div>
