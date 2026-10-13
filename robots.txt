@@ -6,6 +6,10 @@ Allow: /
 User-agent: Googlebot
 Allow: /
 
+User-agent: Googlebot-Image
+Allow: /
+Allow: /assets/images/
+
 User-agent: Bingbot
 Allow: /
 
