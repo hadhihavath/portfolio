@@ -18,4 +18,3 @@ Allow: /
 
 # Sitemap locations
 Sitemap: https://hadhihavath.in/sitemap.xml
-Sitemap: https://hadhihavath.github.io/portfolio/sitemap.xml
