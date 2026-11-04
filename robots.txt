@@ -5,16 +5,37 @@ Allow: /
 # Directives for major search engine crawlers
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 10
 
 User-agent: Googlebot-Image
 Allow: /
 Allow: /assets/images/
+Crawl-delay: 10
 
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 10
 
 User-agent: Applebot
 Allow: /
+Crawl-delay: 10
+
+User-agent: YandexBot
+Allow: /
+Crawl-delay: 10
+
+User-agent: DuckDuckBot
+Allow: /
+Crawl-delay: 10
 
 # Sitemap locations
 Sitemap: https://hadhihavath.in/sitemap.xml
+
+# Host directive for preferred domain
+Host: https://hadhihavath.in
+
+# Additional resources
+Sitemap: https://hadhihavath.in/sitemap.xml
+# Security contact for responsible disclosure
+# Security: https://hadhihavath.in/security.txt
+# Humans: https://hadhihavath.in/humans.txt

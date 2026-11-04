@@ -1,0 +1,47 @@
+# humans.txt for hadhihavath.in
+# Best Developer in Calicut, Kerala - Muhammed Hadhi Havath
+
+# TEAM
+Developer: Muhammed Hadhi Havath
+Also known as: Hadhi Havath, Havath, mr.havath, @hadhihavath
+Role: Full Stack Developer & Systems Engineer
+Location: Calicut (Kozhikode), Kerala, India
+Education: BCA, University of Calicut
+Experience: 5+ years
+Projects: 40+ production repositories
+Specializations: Python/Django, Flutter, Systems Security, Fintech
+
+# CONTACT
+Email: mrhavath@gmail.com
+WhatsApp: +91 9207659510
+GitHub: https://github.com/hadhihavath
+LinkedIn: https://in.linkedin.com/in/hadhihavath
+Instagram: https://instagram.com/hadhihavath
+Portfolio: https://hadhihavath.in
+Twitter: @hadhihavath
+
+# TECHNOLOGY
+Languages: Python, Dart, TypeScript, JavaScript, Kotlin, C, C++, PHP, SQL, Shell
+Frameworks: Django, Flutter, React, Node.js, Express, Tailwind CSS
+Databases: PostgreSQL, MySQL, MongoDB, Firebase, Redis
+Security: OWASP Top 10, Penetration Testing, API Hardening, Cryptography
+DevOps: Linux, Docker, Nginx, GitHub Actions, CI/CD
+Mobile: Flutter, Android CLI, iOS Deployment, App Store, Play Store
+
+# CREDITS
+Design & Development: Muhammed Hadhi Havath (self-built portfolio)
+Fonts: Inter, JetBrains Mono, Syne (Google Fonts)
+Icons: Custom SVG, Unicode Emojis
+Architecture: Semantic HTML5, CSS Grid/Flex, Vanilla JS
+Performance: Lazy loading, Preconnect, Minimal JS
+Security: CSP, HSTS, X-Frame-Options, Content Protection
+
+# SEO
+Primary Keywords: Best Developer in Calicut, Best Full Stack Developer Calicut, Best Flutter Developer Kerala, Python Django Developer Calicut
+Target Location: Calicut (Kozhikode), Kerala, India
+Service Areas: Calicut, Kozhikode, Malappuram, Wayanad, Kannur, Kochi, Thiruvananthapuram, Kerala, India, Global
+
+# THANKS
+University of Calicut for education
+Open source community for tools & inspiration
+Clients across Calicut, Kerala, India & Global for trust

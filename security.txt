@@ -1,0 +1,16 @@
+# Security Contact Information for Muhammed Hadhi Havath (hadhihavath.in)
+# Best Developer in Calicut, Kerala - Security Researcher & Systems Auditor
+
+Contact: mrhavath@gmail.com
+Contact: https://wa.me/919207659510
+Encryption: https://hadhihavath.in/assets/pgp-key.asc
+Acknowledgments: https://hadhihavath.in/#security-acknowledgments
+Policy: https://hadhihavath.in/security-policy
+Hiring: https://hadhihavath.in/#contact
+
+# Scope
+# This security.txt applies to all subdomains and services under hadhihavath.in
+# Includes: Portfolio, RateTracker.in, Sha Collects, and all associated APIs
+
+# Preferred Languages: English, Malayalam
+# Canonical: https://hadhihavath.in/security.txt
