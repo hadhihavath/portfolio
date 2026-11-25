@@ -54,17 +54,19 @@
   <!-- Favicon & Touch Icons -->
   <link rel="icon" type="image/png" href="assets/images/avatar.jpg">
   <link rel="apple-touch-icon" href="assets/images/avatar.jpg">
-  <meta name="theme-color" content="#06080d">
-  <meta name="msapplication-TileColor" content="#06080d">
+  <meta name="theme-color" content="#fbf7ff">
+  <meta name="msapplication-TileColor" content="#fbf7ff">
   <meta name="msapplication-TileImage" content="assets/images/avatar.jpg">
 
   <!-- Google Fonts Preconnect & Styles -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
 
   <!-- Stylesheet -->
   <link rel="stylesheet" href="css/style.css">
+  <link rel="modulepreload" href="js/vendor/three.module.min.js">
+  <script>document.documentElement.classList.add('js');</script>
 
   <!-- =======================================================
        STRUCTURED DATA (JSON-LD) FOR GOOGLE KNOWLEDGE GRAPH
@@ -370,15 +372,20 @@
   }
   </script>
 </head>
-<body data-theme="emerald">
-
-  <!-- Ambient Glowing Atmosphere Background -->
-  <div class="bg-ambient-layer" aria-hidden="true">
-    <div class="ambient-orb orb-1"></div>
-    <div class="ambient-orb orb-2"></div>
-    <div class="ambient-orb orb-3"></div>
-    <div class="bg-grid-overlay"></div>
+<body data-accent="aurora">
+  <!-- Intro loader -->
+  <div class="loader" id="loader" aria-hidden="true">
+    <div class="loader-cube"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="loader-text">Building a 3D world…</div>
   </div>
+
+  <!-- Immersive 3D layers -->
+  <div class="bg-gradient" aria-hidden="true"></div>
+  <canvas id="bg-canvas" class="bg-canvas" aria-hidden="true"></canvas>
+  <div class="avatar-stage" id="avatar-stage" aria-hidden="true"><canvas id="avatar-canvas"></canvas></div>
+  <div class="avatar-bubble" id="avatar-bubble" aria-hidden="true">Hey! I'm Hadhi 👋</div>
+  <button class="buddy-toggle" id="buddy-toggle" type="button" aria-pressed="false">Hide 3D buddy</button>
+  <div class="scroll-progress" aria-hidden="true"><span></span></div>
 
   <!-- =======================================================
        NAVIGATION BAR
@@ -386,8 +393,8 @@
   <header class="navbar" role="banner">
     <div class="nav-container">
       <a href="#top" class="brand-logo" aria-label="Muhammed Hadhi Havath Home">
-        <span class="brand-dot"></span>
-        <span>hadhi.havath</span>
+        <span class="brand-cube" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span>hadhi<b>.</b>havath</span>
       </a>
 
       <nav aria-label="Main Navigation">
@@ -396,120 +403,89 @@
           <li><a href="#terminal" class="nav-link">Terminal</a></li>
           <li><a href="#skills" class="nav-link">Skills</a></li>
           <li><a href="#projects" class="nav-link">Projects</a></li>
-          <li><a href="#experience" class="nav-link">Trajectory</a></li>
+          <li><a href="#experience" class="nav-link">Journey</a></li>
           <li><a href="#faq" class="nav-link">FAQ</a></li>
           <li><a href="#contact" class="nav-link">Contact</a></li>
         </ul>
       </nav>
 
       <div class="nav-actions">
-        <!-- Theme Accent Switcher -->
-        <div class="theme-picker" title="Switch Accent Theme">
-          <button class="theme-dot emerald active" data-theme="emerald" aria-label="Emerald Green Theme"></button>
-          <button class="theme-dot cyan" data-theme="cyan" aria-label="Cyan Blue Theme"></button>
-          <button class="theme-dot purple" data-theme="purple" aria-label="Purple Neon Theme"></button>
-          <button class="theme-dot amber" data-theme="amber" aria-label="Amber Flare Theme"></button>
+        <div class="theme-picker" title="Switch colour vibe">
+          <button class="theme-dot aurora active" data-theme="aurora" aria-label="Aurora colour theme"></button>
+          <button class="theme-dot sunset" data-theme="sunset" aria-label="Sunset colour theme"></button>
+          <button class="theme-dot ocean" data-theme="ocean" aria-label="Ocean colour theme"></button>
+          <button class="theme-dot lime" data-theme="lime" aria-label="Lime colour theme"></button>
         </div>
-
-        <a href="https://github.com/hadhihavath" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary" aria-label="GitHub Profile">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        <a href="https://github.com/hadhihavath" target="_blank" rel="noopener noreferrer" class="btn btn-ghost btn-sm nav-gh" aria-label="GitHub Profile">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
           <span>GitHub</span>
         </a>
-
-        <button class="mobile-toggle" aria-label="Toggle navigation menu">☰</button>
+        <button class="mobile-toggle" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
       </div>
     </div>
   </header>
 
   <main>
     <!-- =======================================================
-         HERO SECTION
+         HERO
          ======================================================= -->
-    <section id="top" class="hero-section">
-      <div class="container">
-        <div class="hero-grid">
-          
-          <div class="hero-content">
-            <div class="status-pill">
-              <span class="status-indicator"></span>
-              <span>Available for Full-Time Roles & Contracts | Best Developer in Calicut</span>
-            </div>
-
-            <!-- Crucial SEO Names Tag -->
-            <div class="alias-names-tag">
-              <span>Known as:</span>
-              <strong>Hadhi Havath</strong> · <strong>Havath</strong> · <strong>@hadhihavath</strong> · <strong>Best Developer in Calicut</strong>
-            </div>
-
-            <h1 class="hero-title">
-              Hi, I'm <br>
-              <span class="gradient-text">Muhammed Hadhi Havath</span>
-            </h1>
-
-            <p class="hero-tagline">
-              <strong>Best Full Stack Developer in Calicut, Kerala</strong> — Python, Django, Flutter & Systems Security Expert.
-              <br>5+ Years • 40+ Production Projects • BCA Calicut University • Enterprise Fintech & Security Specialist.
-              <br>Driven by one clear philosophy: <em>"I build it, then I secure it."</em>
-            </p>
-
-            <div class="hero-cta-group">
-              <a href="#projects" class="btn btn-primary">Explore Featured Work →</a>
-              <a href="#terminal" class="btn btn-secondary">Launch Terminal [CLI]</a>
-              <a href="#contact" class="btn btn-outline-primary">Hire Best Developer in Calicut</a>
-            </div>
-
-            <div class="social-links-row">
-              <a href="https://github.com/hadhihavath" target="_blank" rel="noopener noreferrer" class="social-icon-btn" title="GitHub / @hadhihavath" aria-label="GitHub">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-              </a>
-              <a href="https://in.linkedin.com/in/hadhihavath" target="_blank" rel="noopener noreferrer" class="social-icon-btn" title="LinkedIn / hadhihavath" aria-label="LinkedIn">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-              </a>
-              <a href="https://wa.me/919207659510" target="_blank" rel="noopener noreferrer" class="social-icon-btn" title="WhatsApp / +919207659510" aria-label="WhatsApp">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-              </a>
-              <a href="mailto:mrhavath@gmail.com" class="social-icon-btn" title="Email / mrhavath@gmail.com" aria-label="Email">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l9.518 7.714 9.518-7.714v11.817h-19.036z"/></svg>
-              </a>
-              <a href="https://instagram.com/hadihavath" target="_blank" rel="noopener noreferrer" class="social-icon-btn" title="Instagram / @hadhihavath" aria-label="Instagram">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-              </a>
-            </div>
+    <section id="top" class="hero">
+      <div class="container hero-grid">
+        <div class="hero-content" id="hero-content">
+          <div class="status-pill">
+            <span class="status-indicator"></span>
+            <span>Available for Full-Time Roles &amp; Contracts | Best Developer in Calicut</span>
           </div>
 
-          <!-- Hero Visual: Real Portrait & Floating Credential Badges -->
-          <div class="hero-visual-card">
-            <div class="floating-badge floating-badge-1">
-              <span style="color:var(--primary); font-weight:700;">⚡ 5+ Years</span>
-              <span>Clean Codebase Architecture</span>
-            </div>
-
-            <div class="avatar-frame" id="hero-avatar-frame">
-              <img src="assets/images/hadhihavath.jpg" alt="Muhammed Hadhi Havath (Hadhi Havath) — Software Engineer Portrait" class="avatar-image active" id="hero-avatar-img-1" data-photo="1" width="1400" height="1400" fetchpriority="high">
-              <img src="assets/images/havath.jpg" alt="Muhammed Hadhi Havath (Hadhi Havath) — Systems Engineer Portrait" class="avatar-image" id="hero-avatar-img-2" data-photo="2" width="1291" height="1400" loading="lazy">
-              
-              <div class="avatar-photo-switcher" title="Switch Avatar Portrait">
-                <button type="button" class="switcher-dot active" data-target="1" aria-label="Portrait 1">1</button>
-                <button type="button" class="switcher-dot" data-target="2" aria-label="Portrait 2">2</button>
-              </div>
-
-              <div class="avatar-overlay-badge">
-                <div>
-                  <div class="badge-title">Muhammed Hadhi Havath</div>
-                  <div class="badge-subtitle">Python · Django · Flutter</div>
-                </div>
-                <div style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-subtle);">Calicut, IN</div>
-              </div>
-            </div>
-
-            <div class="floating-badge floating-badge-2">
-              <span style="color:var(--accent); font-weight:700;">🛡️ Security</span>
-              <span>AppSec & Systems Auditing</span>
-            </div>
+          <div class="alias-names-tag">
+            <span>Known as:</span>
+            <strong>Hadhi Havath</strong> · <strong>Havath</strong> · <strong>@hadhihavath</strong> · <strong>Best Developer in Calicut</strong>
           </div>
 
+          <h1 class="hero-title">
+            <span class="hero-hello">Hi, I'm</span>
+            <span class="hero-first">Muhammed</span>
+            <span class="hero-name" data-split>Hadhi Havath</span>
+          </h1>
+
+          <p class="hero-role">I <span class="role-verb">build</span> <span class="rotator" id="rotator" aria-live="polite">secure web apps</span><span class="caret" aria-hidden="true"></span></p>
+
+          <p class="hero-tagline">
+            <strong>Best Full Stack Developer in Calicut, Kerala</strong> — Python, Django, Flutter &amp; Systems Security Expert.
+            5+ Years • 40+ Production Projects • BCA Calicut University • Enterprise Fintech &amp; Security Specialist.
+            Driven by one clear philosophy: <em>"I build it, then I secure it."</em>
+          </p>
+
+          <div class="hero-cta-group">
+            <a href="#projects" class="btn btn-primary">Explore Featured Work →</a>
+            <a href="#terminal" class="btn btn-secondary">Launch Terminal [CLI]</a>
+            <a href="#contact" class="btn btn-ghost">Hire Best Developer in Calicut</a>
+          </div>
+
+          <div class="social-links-row">
+            <a href="https://github.com/hadhihavath" target="_blank" rel="noopener noreferrer" class="social-icon-btn" title="GitHub / @hadhihavath" aria-label="GitHub"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a>
+            <a href="https://in.linkedin.com/in/hadhihavath" target="_blank" rel="noopener noreferrer" class="social-icon-btn" title="LinkedIn / hadhihavath" aria-label="LinkedIn"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
+            <a href="https://wa.me/919207659510" target="_blank" rel="noopener noreferrer" class="social-icon-btn" title="WhatsApp / +919207659510" aria-label="WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg></a>
+            <a href="mailto:mrhavath@gmail.com" class="social-icon-btn" title="Email / mrhavath@gmail.com" aria-label="Email"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l9.518 7.714 9.518-7.714v11.817h-19.036z"/></svg></a>
+            <a href="https://instagram.com/hadihavath" target="_blank" rel="noopener noreferrer" class="social-icon-btn" title="Instagram / @hadhihavath" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="hero-avatar-spot avatar-spot" id="hero-avatar-spot">
+            <div class="spot-glow" aria-hidden="true"></div>
+            <img src="assets/images/hadhihavath.jpg" alt="Muhammed Hadhi Havath (Hadhi Havath) — Software Engineer Portrait" class="avatar-fallback" width="1400" height="1400" fetchpriority="high">
+          </div>
+          <div class="floating-badge floating-badge-1" aria-hidden="true"><b>⚡ 5+ Years</b><span>Clean Codebase Architecture</span></div>
+          <div class="floating-badge floating-badge-2" aria-hidden="true"><b>🛡️ Security</b><span>AppSec &amp; Systems Auditing</span></div>
+          <div class="floating-badge floating-badge-3" aria-hidden="true"><b>📱 Flutter</b><span>iOS · Android · Web</span></div>
         </div>
       </div>
+
+      <a href="#about" class="scroll-cue" aria-label="Scroll to explore">
+        <span class="mouse" aria-hidden="true"><span></span></span>
+        <span>Scroll to explore</span>
+      </a>
     </section>
 
     <!-- =======================================================
@@ -518,28 +494,28 @@
     <section class="stats-ribbon" aria-label="Key Developer Metrics">
       <div class="container">
         <div class="stats-grid">
-          <div class="stat-item">
-            <div class="stat-number accent-text">5+</div>
+          <div class="stat-item tilt-3d c1" data-reveal>
+            <div class="stat-number"><span data-count="5">5</span>+</div>
             <div class="stat-label">Years Experience in Calicut</div>
           </div>
-          <div class="stat-item">
-            <div class="stat-number">40+</div>
+          <div class="stat-item tilt-3d c2" data-reveal>
+            <div class="stat-number"><span data-count="40">40</span>+</div>
             <div class="stat-label">Production Projects Kerala</div>
           </div>
-          <div class="stat-item">
-            <div class="stat-number accent-text">100%</div>
+          <div class="stat-item tilt-3d c3" data-reveal>
+            <div class="stat-number"><span data-count="100">100</span>%</div>
             <div class="stat-label">Production Stability Rate</div>
           </div>
-          <div class="stat-item">
+          <div class="stat-item tilt-3d c4" data-reveal>
             <div class="stat-number">BCA</div>
             <div class="stat-label">University of Calicut Graduate</div>
           </div>
-          <div class="stat-item">
-            <div class="stat-number">12+</div>
-            <div class="stat-label">Fintech & Security Projects</div>
+          <div class="stat-item tilt-3d c5" data-reveal>
+            <div class="stat-number"><span data-count="12">12</span>+</div>
+            <div class="stat-label">Fintech &amp; Security Projects</div>
           </div>
-          <div class="stat-item">
-            <div class="stat-number">50+</div>
+          <div class="stat-item tilt-3d c6" data-reveal>
+            <div class="stat-number"><span data-count="50">50</span>+</div>
             <div class="stat-label">Happy Clients Worldwide</div>
           </div>
         </div>
@@ -547,108 +523,60 @@
     </section>
 
     <!-- =======================================================
-         ABOUT SECTION
+         ABOUT
          ======================================================= -->
-    <section id="about">
+    <section id="about" class="section">
       <div class="container">
-        <div class="section-header">
-          <div class="section-label">01 // Engineering Profile</div>
+        <div class="bigword" aria-hidden="true">ABOUT</div>
+        <div class="section-header" data-reveal>
+          <div class="section-label"><span class="label-dot"></span>01 // Engineering Profile</div>
           <h2 class="section-title">About Muhammed Hadhi Havath — Best Developer in Calicut, Kerala</h2>
-          <p class="section-desc">Award-winning Full Stack Developer & Systems Engineer from Calicut (Kozhikode), Kerala. Building resilient digital infrastructure where modern frontends meet decoupled, ironclad backend APIs. Recognized as the top Python Django developer and Flutter engineer in Calicut.</p>
+          <p class="section-desc">Award-winning Full Stack Developer &amp; Systems Engineer from Calicut (Kozhikode), Kerala. Building resilient digital infrastructure where modern frontends meet decoupled, ironclad backend APIs. Recognized as the top Python Django developer and Flutter engineer in Calicut.</p>
         </div>
 
         <div class="about-grid">
-          <!-- Visual Portrait Card featuring havath.jpg -->
-          <div class="about-visual-card">
-            <div class="about-image-frame">
-              <img src="assets/images/havath.jpg" alt="Muhammed Hadhi Havath (Hadhi Havath) — Best Developer in Calicut, Software Engineer and Verified Architect" class="about-image" width="1291" height="1400" loading="lazy">
-              <div class="about-image-overlay">
-                <div class="about-image-badge">
-                  <span class="status-indicator"></span>
-                  <span>Verified Architect | Best Developer Calicut</span>
-                </div>
-                <div class="about-image-caption">
-                  <div class="caption-title">Muhammed Hadhi Havath</div>
-                  <div class="caption-subtitle">Hadhi Havath · Havath · mr.havath · Best Developer in Calicut</div>
-                </div>
-              </div>
-            </div>
-
+          <div class="photo-stack" id="photo-stack" data-reveal>
+            <figure class="photo-card photo-back">
+              <img src="assets/images/hadhihavath.jpg" alt="Muhammed Hadhi Havath (Hadhi Havath) — Systems Engineer Portrait at the Taj Mahal" width="1400" height="1400" loading="lazy">
+            </figure>
+            <figure class="photo-card photo-front">
+              <img src="assets/images/havath.jpg" alt="Muhammed Hadhi Havath (Hadhi Havath) — Best Developer in Calicut, Software Engineer and Verified Architect" width="1291" height="1400" loading="lazy">
+              <figcaption>
+                <span class="verified"><span class="status-indicator"></span>Verified Architect | Best Developer Calicut</span>
+                <strong>Muhammed Hadhi Havath</strong>
+                <small>Hadhi Havath · Havath · mr.havath · Best Developer in Calicut</small>
+              </figcaption>
+            </figure>
+            <div class="photo-hint" aria-hidden="true">Hover to shuffle ↻</div>
             <div class="about-portrait-stats">
-              <div class="portrait-stat-item">
-                <span class="stat-mini-num">5+</span>
-                <span class="stat-mini-txt">Years Exp Calicut</span>
-              </div>
-              <div class="portrait-stat-item">
-                <span class="stat-mini-num">BCA</span>
-                <span class="stat-mini-txt">Calicut University</span>
-              </div>
-              <div class="portrait-stat-item">
-                <span class="stat-mini-num">40+</span>
-                <span class="stat-mini-txt">Kerala Projects</span>
-              </div>
+              <div><b>5+</b><span>Years Exp Calicut</span></div>
+              <div><b>BCA</b><span>Calicut University</span></div>
+              <div><b>40+</b><span>Kerala Projects</span></div>
             </div>
           </div>
 
-          <!-- Narrative Bio & Technical Specifications Column -->
           <div class="about-content-column">
-            <div class="glass-card about-card">
-              <p class="about-paragraph">
-                I am <strong>Muhammed Hadhi Havath</strong> (frequently credited as <strong>Hadhi Havath</strong> or <strong>Havath</strong>), widely recognized as the <strong>best developer in Calicut, Kerala</strong>. I am a passionate Full Stack Developer and Systems Engineer from <strong>Calicut (Kozhikode), Kerala, India</strong>. I completed my <strong>Bachelor of Computer Application (BCA)</strong> from the <strong>University of Calicut</strong>, cultivating a strong grounding in algorithms, database design, and systems engineering.
-              </p>
-              <p class="about-paragraph">
-                Over the last half-decade of hands-on software development in <strong>Calicut, Kerala</strong>, my focus has gravitated toward <strong>Python & Django</strong> web frameworks, modern <strong>TypeScript/JavaScript</strong> user interfaces, and cross-platform mobile apps built with <strong>Flutter</strong>. As the <strong>top Python Django developer in Calicut</strong> and <strong>best Flutter developer in Kerala</strong>, I've delivered enterprise-grade solutions for clients across Calicut, Kozhikode, Malappuram, Wayanad, Kochi, Thiruvananthapuram, and globally.
-              </p>
-              <div class="highlight-box">
-                "Great software isn't just about shipping features fast—it is about architectural purity, deterministic behavior under load, and zero tolerance for security oversights. — Muhammed Hadhi Havath, Best Developer in Calicut"
-              </div>
-              <p class="about-paragraph">
-                Beyond product engineering, I actively conduct <strong>systems auditing</strong> and security reviews, examining web integrations, APIs, and access control models against OWASP standards to ensure high reliability. My expertise as a <strong>systems security auditor in Calicut</strong> has helped numerous businesses secure their digital infrastructure.
-              </p>
+            <div class="card about-card" data-reveal>
+              <p>I am <strong>Muhammed Hadhi Havath</strong> (frequently credited as <strong>Hadhi Havath</strong> or <strong>Havath</strong>), widely recognized as the <strong>best developer in Calicut, Kerala</strong>. I am a passionate Full Stack Developer and Systems Engineer from <strong>Calicut (Kozhikode), Kerala, India</strong>. I completed my <strong>Bachelor of Computer Application (BCA)</strong> from the <strong>University of Calicut</strong>, cultivating a strong grounding in algorithms, database design, and systems engineering.</p>
+              <p>Over the last half-decade of hands-on software development in <strong>Calicut, Kerala</strong>, my focus has gravitated toward <strong>Python &amp; Django</strong> web frameworks, modern <strong>TypeScript/JavaScript</strong> user interfaces, and cross-platform mobile apps built with <strong>Flutter</strong>. As the <strong>top Python Django developer in Calicut</strong> and <strong>best Flutter developer in Kerala</strong>, I've delivered enterprise-grade solutions for clients across Calicut, Kozhikode, Malappuram, Wayanad, Kochi, Thiruvananthapuram, and globally.</p>
+              <blockquote class="highlight-box">"Great software isn't just about shipping features fast—it is about architectural purity, deterministic behavior under load, and zero tolerance for security oversights. — Muhammed Hadhi Havath, Best Developer in Calicut"</blockquote>
+              <p>Beyond product engineering, I actively conduct <strong>systems auditing</strong> and security reviews, examining web integrations, APIs, and access control models against OWASP standards to ensure high reliability. My expertise as a <strong>systems security auditor in Calicut</strong> has helped numerous businesses secure their digital infrastructure.</p>
             </div>
 
-            <div class="glass-card about-card">
-              <h3 style="font-size:1.3rem;">Engineering Specifications — Best Developer in Calicut</h3>
-              <div class="about-specs-list">
-                <div class="spec-item">
-                  <span class="spec-label">Full Name</span>
-                  <span class="spec-val">Muhammed Hadhi Havath</span>
-                </div>
-                <div class="spec-item">
-                  <span class="spec-label">Common Aliases</span>
-                  <span class="spec-val">Hadhi Havath / Havath / mr.havath</span>
-                </div>
-                <div class="spec-item">
-                  <span class="spec-label">Primary Stack</span>
-                  <span class="spec-val">Python, Django, Flutter, Dart, TypeScript</span>
-                </div>
-                <div class="spec-item">
-                  <span class="spec-label">Degree</span>
-                  <span class="spec-val">BCA, University of Calicut</span>
-                </div>
-                <div class="spec-item">
-                  <span class="spec-label">Location</span>
-                  <span class="spec-val">Calicut (Kozhikode), Kerala, India</span>
-                </div>
-                <div class="spec-item">
-                  <span class="spec-label">Service Areas</span>
-                  <span class="spec-val">Calicut, Kozhikode, Kerala, India, Global</span>
-                </div>
-                <div class="spec-item">
-                  <span class="spec-label">Work Status</span>
-                  <span class="spec-val" style="color:var(--primary);">Open to Work / Freelance / Contracts</span>
-                </div>
-                <div class="spec-item">
-                  <span class="spec-label">Specialization</span>
-                  <span class="spec-val">Fintech, Security, Mobile, Web</span>
-                </div>
-                <div class="spec-item">
-                  <span class="spec-label">Ranking</span>
-                  <span class="spec-val" style="color:var(--primary);">#1 Developer in Calicut</span>
-                </div>
-              </div>
-
-              <div style="margin-top:1rem; display:flex; gap:0.75rem; flex-wrap:wrap;">
+            <div class="card about-card" data-reveal>
+              <h3>Engineering Specifications — Best Developer in Calicut</h3>
+              <dl class="about-specs-list">
+                <div class="spec-item"><dt>Full Name</dt><dd>Muhammed Hadhi Havath</dd></div>
+                <div class="spec-item"><dt>Common Aliases</dt><dd>Hadhi Havath / Havath / mr.havath</dd></div>
+                <div class="spec-item"><dt>Primary Stack</dt><dd>Python, Django, Flutter, Dart, TypeScript</dd></div>
+                <div class="spec-item"><dt>Degree</dt><dd>BCA, University of Calicut</dd></div>
+                <div class="spec-item"><dt>Location</dt><dd>Calicut (Kozhikode), Kerala, India</dd></div>
+                <div class="spec-item"><dt>Service Areas</dt><dd>Calicut, Kozhikode, Kerala, India, Global</dd></div>
+                <div class="spec-item"><dt>Work Status</dt><dd class="hl">Open to Work / Freelance / Contracts</dd></div>
+                <div class="spec-item"><dt>Specialization</dt><dd>Fintech, Security, Mobile, Web</dd></div>
+                <div class="spec-item"><dt>Ranking</dt><dd class="hl">#1 Developer in Calicut</dd></div>
+              </dl>
+              <div class="btn-row">
                 <a href="#contact" class="btn btn-primary">Hire Best Developer in Calicut</a>
                 <button class="btn btn-secondary copy-trigger" data-copy="mrhavath@gmail.com">Copy Email Address</button>
               </div>
@@ -659,825 +587,484 @@
     </section>
 
     <!-- =======================================================
-         INTERACTIVE CYBERPUNK TERMINAL (CLI)
+         TERMINAL (CLI)
          ======================================================= -->
-    <section id="terminal" style="padding-top:2rem;">
+    <section id="terminal" class="section terminal-section">
       <div class="container">
-        <div class="section-header">
-          <div class="section-label">02 // Interactive Console</div>
+        <div class="bigword" aria-hidden="true">SHELL</div>
+        <div class="section-header center" data-reveal>
+          <div class="section-label"><span class="label-dot"></span>02 // Interactive Console</div>
           <h2 class="section-title">Terminal [CLI Interface]</h2>
           <p class="section-desc">A full-fidelity developer shell emulator right in your browser. Type commands, explore virtual directories, or test your security skills with the CTF challenge.</p>
         </div>
 
-        <div class="terminal-wrapper" role="region" aria-label="Interactive Shell Terminal">
-          <div class="terminal-header">
-            <div class="terminal-controls">
-              <span class="terminal-dot dot-red"></span>
-              <span class="terminal-dot dot-yellow"></span>
-              <span class="terminal-dot dot-green"></span>
+        <div class="terminal-scene">
+          <div class="terminal-wrapper" id="terminal-window" role="region" aria-label="Interactive Shell Terminal">
+            <div class="terminal-header">
+              <div class="terminal-controls">
+                <span class="terminal-dot dot-red"></span>
+                <span class="terminal-dot dot-yellow"></span>
+                <span class="terminal-dot dot-green"></span>
+              </div>
+              <div class="terminal-title">guest@hadhihavath:~ (zsh) — 80x24</div>
+              <div class="terminal-actions-bar">
+                <button id="terminal-sound-btn" class="sound-toggle-btn" title="Toggle mechanical keyboard audio">🔈 Sound: OFF</button>
+              </div>
             </div>
-            <div class="terminal-title">guest@hadhihavath:~ (zsh) — 80x24</div>
-            <div class="terminal-actions-bar">
-              <button id="terminal-sound-btn" class="sound-toggle-btn" title="Toggle mechanical keyboard audio">🔈 Sound: OFF</button>
+            <div class="terminal-body">
+              <div id="terminal-output" class="terminal-output">
+                <div class="terminal-line success">=============================================================</div>
+                <div class="terminal-line success">  HADHI HAVATH SYSTEM SHELL [v5.0.0-3D] — SECURE HOST</div>
+                <div class="terminal-line info">  Identity: Muhammed Hadhi Havath | Full Stack &amp; Security</div>
+                <div class="terminal-line accent">  Type "help" to list available commands. Tab for autocomplete.</div>
+                <div class="terminal-line info">  Easter Egg: Run "cat flag.txt" to launch the CTF challenge.</div>
+                <div class="terminal-line success">=============================================================</div>
+              </div>
+              <div class="terminal-prompt-row">
+                <span class="terminal-prompt">guest@hadhihavath:~$</span>
+                <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" spellcheck="false" placeholder="type 'help', 'whoami', 'projects'..." aria-label="Terminal Command Input">
+              </div>
             </div>
           </div>
-
-          <div class="terminal-body">
-            <div id="terminal-output" class="terminal-output">
-              <div class="terminal-line success">=============================================================</div>
-              <div class="terminal-line success">  HADHI HAVATH SYSTEM SHELL [v4.2.0-LTS] — SECURE HOST</div>
-              <div class="terminal-line info">  Identity: Muhammed Hadhi Havath | Full Stack & Security</div>
-              <div class="terminal-line accent">  Type "help" to list available commands. Tab for autocomplete.</div>
-              <div class="terminal-line info">  Easter Egg: Run "cat flag.txt" to launch the CTF challenge.</div>
-              <div class="terminal-line success">=============================================================</div>
-            </div>
-
-            <div class="terminal-prompt-row">
-              <span class="terminal-prompt">guest@hadhihavath:~$</span>
-              <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" spellcheck="false" placeholder="type 'help', 'whoami', 'projects'..." aria-label="Terminal Command Input">
-            </div>
-          </div>
+          <div class="terminal-shadow" aria-hidden="true"></div>
         </div>
       </div>
     </section>
 
     <!-- =======================================================
-         TECHNICAL ARSENAL (SKILLS)
+         SKILLS — 3D scroll ring
          ======================================================= -->
-    <section id="skills">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-label">03A // Technical Arsenal</div>
-          <h2 class="section-title">Core Technologies & Frameworks</h2>
+    <section id="skills" class="section skills-section">
+      <div class="skills-pin" id="skills-pin">
+        <div class="container">
+          <div class="bigword" aria-hidden="true">STACK</div>
+        <div class="section-header center" data-reveal>
+          <div class="section-label"><span class="label-dot"></span>03A // Technical Arsenal</div>
+          <h2 class="section-title">Core Technologies &amp; Frameworks</h2>
           <p class="section-desc">A curated breakdown of programming languages, libraries, databases, and auditing tools utilized across production builds by the best developer in Calicut.</p>
         </div>
-
-        <div class="skills-categories-grid">
-          <!-- Backend & Systems -->
-          <div class="glass-card skill-category-card">
-            <div class="category-icon-title">
-              <span class="category-icon">⚙️</span>
-              <h3 class="category-title">Backend & Systems</h3>
-            </div>
-            <p style="font-size:0.875rem; color:var(--text-muted);">Decoupled RESTful APIs, high concurrency, and data persistence.</p>
-            <div class="skill-tags-cloud">
-              <span class="skill-badge">Python</span>
-              <span class="skill-badge">Django / DRF</span>
-              <span class="skill-badge">Node.js</span>
-              <span class="skill-badge">C / C++</span>
-              <span class="skill-badge">PHP</span>
-              <span class="skill-badge">PostgreSQL</span>
-              <span class="skill-badge">MySQL</span>
-              <span class="skill-badge">MongoDB</span>
-              <span class="skill-badge">Redis</span>
-            </div>
-          </div>
-
-          <!-- Mobile & Fintech -->
-          <div class="glass-card skill-category-card">
-            <div class="category-icon-title">
-              <span class="category-icon">📱</span>
-              <h3 class="category-title">Mobile & Fintech</h3>
-            </div>
-            <p style="font-size:0.875rem; color:var(--text-muted);">High-performance cross-platform apps, offline sync, and payment rails.</p>
-            <div class="skill-tags-cloud">
-              <span class="skill-badge">Flutter</span>
-              <span class="skill-badge">Dart</span>
-              <span class="skill-badge">Kotlin</span>
-              <span class="skill-badge">Android CLI</span>
-              <span class="skill-badge">Firebase</span>
-              <span class="skill-badge">Razorpay API</span>
-              <span class="skill-badge">Stripe</span>
-              <span class="skill-badge">Fintech Flows</span>
-            </div>
-          </div>
-
-          <!-- Frontend & UI -->
-          <div class="glass-card skill-category-card">
-            <div class="category-icon-title">
-              <span class="category-icon">🎨</span>
-              <h3 class="category-title">Frontend & Web</h3>
-            </div>
-            <p style="font-size:0.875rem; color:var(--text-muted);">Fluid, accessible, mobile-first interfaces with micro-interactions.</p>
-            <div class="skill-tags-cloud">
-              <span class="skill-badge">TypeScript</span>
-              <span class="skill-badge">JavaScript (ES6+)</span>
-              <span class="skill-badge">React</span>
-              <span class="skill-badge">HTML5 / Semantic</span>
-              <span class="skill-badge">CSS3 / Grid / Flex</span>
-              <span class="skill-badge">Tailwind CSS</span>
-              <span class="skill-badge">Bootstrap</span>
-              <span class="skill-badge">Figma</span>
-            </div>
-          </div>
-
-          <!-- Security & Auditing -->
-          <div class="glass-card skill-category-card">
-            <div class="category-icon-title">
-              <span class="category-icon">🛡️</span>
-              <h3 class="category-title">Security & Hardening</h3>
-            </div>
-            <p style="font-size:0.875rem; color:var(--text-muted);">Proactive vulnerability discovery, authentication hardening, and cryptanalysis.</p>
-            <div class="skill-tags-cloud">
-              <span class="skill-badge">Systems Auditing</span>
-              <span class="skill-badge">OWASP Top 10</span>
-              <span class="skill-badge">Penetration Testing</span>
-              <span class="skill-badge">API Hardening</span>
-              <span class="skill-badge">Cryptography</span>
-              <span class="skill-badge">Wi-Fi Auditing</span>
-              <span class="skill-badge">Authentication / JWT</span>
-            </div>
-          </div>
-
-          <!-- DevOps & Tooling -->
-          <div class="glass-card skill-category-card">
-            <div class="category-icon-title">
-              <span class="category-icon">🚀</span>
-              <h3 class="category-title">DevOps & Cloud</h3>
-            </div>
-            <p style="font-size:0.875rem; color:var(--text-muted);">Deployment pipelines, containerization, and environment telemetry.</p>
-            <div class="skill-tags-cloud">
-              <span class="skill-badge">Linux (Debian/Arch)</span>
-              <span class="skill-badge">Shell Scripting</span>
-              <span class="skill-badge">Git & GitHub</span>
-              <span class="skill-badge">Docker</span>
-              <span class="skill-badge">Nginx</span>
-              <span class="skill-badge">GitHub Actions</span>
-              <span class="skill-badge">REST API Design</span>
-            </div>
-          </div>
-
-          <!-- AI & Research -->
-          <div class="glass-card skill-category-card">
-            <div class="category-icon-title">
-              <span class="category-icon">🧠</span>
-              <h3 class="category-title">AI & Data Utilities</h3>
-            </div>
-            <p style="font-size:0.875rem; color:var(--text-muted);">Computer vision heuristics, text recognition, and predictive pipelines.</p>
-            <div class="skill-tags-cloud">
-              <span class="skill-badge">Computer Vision</span>
-              <span class="skill-badge">In-Browser OCR</span>
-              <span class="skill-badge">AI Detection</span>
-              <span class="skill-badge">Voice Automation</span>
-              <span class="skill-badge">Data Parsing</span>
-              <span class="skill-badge">Algorithmic Heuristics</span>
-            </div>
+        </div>
+        <div class="ring-viewport">
+          <div class="ring" id="skills-ring">
+            <article class="ring-card c1" style="--i:0">
+              <div class="ring-card-top"><span class="category-icon" aria-hidden="true">⚙️</span><span class="ring-index">01</span></div>
+              <h3 class="category-title">Backend &amp; Systems</h3>
+              <p>Decoupled RESTful APIs, high concurrency, and data persistence.</p>
+              <div class="skill-tags-cloud"><span class="skill-badge">Python</span><span class="skill-badge">Django / DRF</span><span class="skill-badge">Node.js</span><span class="skill-badge">C / C++</span><span class="skill-badge">PHP</span><span class="skill-badge">PostgreSQL</span><span class="skill-badge">MySQL</span><span class="skill-badge">MongoDB</span><span class="skill-badge">Redis</span></div>
+            </article>
+            <article class="ring-card c2" style="--i:1">
+              <div class="ring-card-top"><span class="category-icon" aria-hidden="true">📱</span><span class="ring-index">02</span></div>
+              <h3 class="category-title">Mobile &amp; Fintech</h3>
+              <p>High-performance cross-platform apps, offline sync, and payment rails.</p>
+              <div class="skill-tags-cloud"><span class="skill-badge">Flutter</span><span class="skill-badge">Dart</span><span class="skill-badge">Kotlin</span><span class="skill-badge">Android CLI</span><span class="skill-badge">Firebase</span><span class="skill-badge">Razorpay API</span><span class="skill-badge">Stripe</span><span class="skill-badge">Fintech Flows</span></div>
+            </article>
+            <article class="ring-card c3" style="--i:2">
+              <div class="ring-card-top"><span class="category-icon" aria-hidden="true">🎨</span><span class="ring-index">03</span></div>
+              <h3 class="category-title">Frontend &amp; Web</h3>
+              <p>Fluid, accessible, mobile-first interfaces with micro-interactions.</p>
+              <div class="skill-tags-cloud"><span class="skill-badge">TypeScript</span><span class="skill-badge">JavaScript (ES6+)</span><span class="skill-badge">React</span><span class="skill-badge">HTML5 / Semantic</span><span class="skill-badge">CSS3 / Grid / Flex</span><span class="skill-badge">Tailwind CSS</span><span class="skill-badge">Bootstrap</span><span class="skill-badge">Figma</span></div>
+            </article>
+            <article class="ring-card c4" style="--i:3">
+              <div class="ring-card-top"><span class="category-icon" aria-hidden="true">🛡️</span><span class="ring-index">04</span></div>
+              <h3 class="category-title">Security &amp; Hardening</h3>
+              <p>Proactive vulnerability discovery, authentication hardening, and cryptanalysis.</p>
+              <div class="skill-tags-cloud"><span class="skill-badge">Systems Auditing</span><span class="skill-badge">OWASP Top 10</span><span class="skill-badge">Penetration Testing</span><span class="skill-badge">API Hardening</span><span class="skill-badge">Cryptography</span><span class="skill-badge">Wi-Fi Auditing</span><span class="skill-badge">Authentication / JWT</span></div>
+            </article>
+            <article class="ring-card c5" style="--i:4">
+              <div class="ring-card-top"><span class="category-icon" aria-hidden="true">🚀</span><span class="ring-index">05</span></div>
+              <h3 class="category-title">DevOps &amp; Cloud</h3>
+              <p>Deployment pipelines, containerization, and environment telemetry.</p>
+              <div class="skill-tags-cloud"><span class="skill-badge">Linux (Debian/Arch)</span><span class="skill-badge">Shell Scripting</span><span class="skill-badge">Git &amp; GitHub</span><span class="skill-badge">Docker</span><span class="skill-badge">Nginx</span><span class="skill-badge">GitHub Actions</span><span class="skill-badge">REST API Design</span></div>
+            </article>
+            <article class="ring-card c6" style="--i:5">
+              <div class="ring-card-top"><span class="category-icon" aria-hidden="true">🧠</span><span class="ring-index">06</span></div>
+              <h3 class="category-title">AI &amp; Data Utilities</h3>
+              <p>Computer vision heuristics, text recognition, and predictive pipelines.</p>
+              <div class="skill-tags-cloud"><span class="skill-badge">Computer Vision</span><span class="skill-badge">In-Browser OCR</span><span class="skill-badge">AI Detection</span><span class="skill-badge">Voice Automation</span><span class="skill-badge">Data Parsing</span><span class="skill-badge">Algorithmic Heuristics</span></div>
+            </article>
           </div>
         </div>
+        <div class="ring-hint" aria-hidden="true"><span>↻</span> Keep scrolling to spin the stack</div>
       </div>
     </section>
 
     <!-- =======================================================
-         SERVICES & OFFERINGS (SEO: Service Pages)
+         SERVICES
          ======================================================= -->
-    <section id="services">
+    <section id="services" class="section">
       <div class="container">
-        <div class="section-header" style="text-align:center; align-items:center;">
-          <div class="section-label">03B // Services Offered</div>
+        <div class="bigword" aria-hidden="true">BUILD</div>
+        <div class="section-header center" data-reveal>
+          <div class="section-label"><span class="label-dot"></span>03B // Services Offered</div>
           <h2 class="section-title">Development Services in Calicut, Kerala</h2>
           <p class="section-desc">Comprehensive software engineering services from the best developer in Calicut. Serving clients across Calicut, Kozhikode, Kerala, India and globally.</p>
         </div>
 
-        <div class="skills-categories-grid">
-          <!-- Full Stack Web Development -->
-          <div class="glass-card skill-category-card">
-            <div class="category-icon-title">
-              <span class="category-icon">🌐</span>
-              <h3 class="category-title">Full Stack Web Development</h3>
-            </div>
-            <p style="font-size:0.875rem; color:var(--text-muted);">Custom web applications using modern technologies. Python/Django backends with React/TypeScript frontends.</p>
-            <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.5rem;">
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> Python Django REST API Development</li>
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> React & TypeScript Frontend Development</li>
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> PostgreSQL, MySQL Database Design</li>
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> Real-time Features with WebSockets</li>
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> SEO-Optimized Web Applications</li>
-            </ul>
-            <a href="#contact" class="btn btn-outline-primary" style="margin-top:1rem; width:100%;">Get Quote for Web Dev</a>
-          </div>
-
-          <!-- Flutter Mobile App Development -->
-          <div class="glass-card skill-category-card">
-            <div class="category-icon-title">
-              <span class="category-icon">📱</span>
-              <h3 class="category-title">Flutter Mobile App Development</h3>
-            </div>
-            <p style="font-size:0.875rem; color:var(--text-muted);">Cross-platform iOS & Android apps with Flutter & Dart. Enterprise-grade fintech, e-commerce & productivity apps.</p>
-            <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.5rem;">
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> Flutter iOS & Android App Development</li>
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> Fintech & Payment Integration (Razorpay, Stripe)</li>
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> Firebase & Custom Backend Integration</li>
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> Offline-First Architecture</li>
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> App Store & Play Store Deployment</li>
-            </ul>
-            <a href="#contact" class="btn btn-outline-primary" style="margin-top:1rem; width:100%;">Get Quote for Flutter App</a>
-          </div>
-
-          <!-- Systems Security Auditing -->
-          <div class="glass-card skill-category-card">
-            <div class="category-icon-title">
-              <span class="category-icon">🛡️</span>
-              <h3 class="category-title">Systems Security Auditing</h3>
-            </div>
-            <p style="font-size:0.875rem; color:var(--text-muted);">OWASP-based security reviews, penetration testing, API hardening & vulnerability assessments for web & mobile apps.</p>
-            <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.5rem;">
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> OWASP Top 10 Vulnerability Assessment</li>
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> API Security Testing & Hardening</li>
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> Penetration Testing (Web & Mobile)</li>
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> Code Review & Secure Architecture</li>
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> Compliance & Security Reporting</li>
-            </ul>
-            <a href="#contact" class="btn btn-outline-primary" style="margin-top:1rem; width:100%;">Request Security Audit</a>
-          </div>
-
-          <!-- Fintech Development -->
-          <div class="glass-card skill-category-card">
-            <div class="category-icon-title">
-              <span class="category-icon">💳</span>
-              <h3 class="category-title">Fintech Development</h3>
-            </div>
-            <p style="font-size:0.875rem; color:var(--text-muted);">Payment gateways, financial dashboards, trading platforms, collection management systems. Built with security-first approach.</p>
-            <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.5rem;">
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> Payment Gateway Integration (Razorpay, Stripe, PhonePe)</li>
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> Financial Dashboard & Analytics</li>
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> Collection & Recovery Management Systems</li>
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> Trading & Commodity Rate Trackers</li>
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> PCI-DSS Compliant Architecture</li>
-            </ul>
-            <a href="#contact" class="btn btn-outline-primary" style="margin-top:1rem; width:100%;">Get Quote for Fintech</a>
-          </div>
-
-          <!-- API Development & Integration -->
-          <div class="glass-card skill-category-card">
-            <div class="category-icon-title">
-              <span class="category-icon">🔌</span>
-              <h3 class="category-title">API Development & Integration</h3>
-            </div>
-            <p style="font-size:0.875rem; color:var(--text-muted);">RESTful APIs, GraphQL, third-party integrations, webhook systems, and microservices architecture.</p>
-            <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.5rem;">
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> REST API Design & Development (Django/Node)</li>
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> GraphQL API Development</li>
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> Third-party API Integration</li>
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> Webhook & Event-Driven Architecture</li>
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> API Documentation (OpenAPI/Swagger)</li>
-            </ul>
-            <a href="#contact" class="btn btn-outline-primary" style="margin-top:1rem; width:100%;">Get Quote for API Dev</a>
-          </div>
-
-          <!-- DevOps & Cloud Deployment -->
-          <div class="glass-card skill-category-card">
-            <div class="category-icon-title">
-              <span class="category-icon">☁️</span>
-              <h3 class="category-title">DevOps & Cloud Deployment</h3>
-            </div>
-            <p style="font-size:0.875rem; color:var(--text-muted);">CI/CD pipelines, Docker containerization, Nginx, Linux server management, GitHub Actions, monitoring & scaling.</p>
-            <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.5rem;">
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> Docker Containerization & Orchestration</li>
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> CI/CD with GitHub Actions / GitLab CI</li>
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> Nginx Reverse Proxy & Load Balancing</li>
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> Linux Server Hardening (Debian/Ubuntu/Arch)</li>
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.9rem;"><span style="color:var(--primary);">✓</span> Monitoring, Logging & Auto-scaling</li>
-            </ul>
-            <a href="#contact" class="btn btn-outline-primary" style="margin-top:1rem; width:100%;">Get Quote for DevOps</a>
-          </div>
+        <div class="services-grid">
+          <article class="card service-card tilt-3d c1" data-reveal>
+            <div class="service-icon" aria-hidden="true">🌐</div>
+            <h3 class="category-title">Full Stack Web Development</h3>
+            <p>Custom web applications using modern technologies. Python/Django backends with React/TypeScript frontends.</p>
+            <ul class="check-list"><li>Python Django REST API Development</li><li>React &amp; TypeScript Frontend Development</li><li>PostgreSQL, MySQL Database Design</li><li>Real-time Features with WebSockets</li><li>SEO-Optimized Web Applications</li></ul>
+            <a href="#contact" class="btn btn-ghost btn-block">Get Quote for Web Dev</a>
+          </article>
+          <article class="card service-card tilt-3d c2" data-reveal>
+            <div class="service-icon" aria-hidden="true">📱</div>
+            <h3 class="category-title">Flutter Mobile App Development</h3>
+            <p>Cross-platform iOS &amp; Android apps with Flutter &amp; Dart. Enterprise-grade fintech, e-commerce &amp; productivity apps.</p>
+            <ul class="check-list"><li>Flutter iOS &amp; Android App Development</li><li>Fintech &amp; Payment Integration (Razorpay, Stripe)</li><li>Firebase &amp; Custom Backend Integration</li><li>Offline-First Architecture</li><li>App Store &amp; Play Store Deployment</li></ul>
+            <a href="#contact" class="btn btn-ghost btn-block">Get Quote for Flutter App</a>
+          </article>
+          <article class="card service-card tilt-3d c3" data-reveal>
+            <div class="service-icon" aria-hidden="true">🛡️</div>
+            <h3 class="category-title">Systems Security Auditing</h3>
+            <p>OWASP-based security reviews, penetration testing, API hardening &amp; vulnerability assessments for web &amp; mobile apps.</p>
+            <ul class="check-list"><li>OWASP Top 10 Vulnerability Assessment</li><li>API Security Testing &amp; Hardening</li><li>Penetration Testing (Web &amp; Mobile)</li><li>Code Review &amp; Secure Architecture</li><li>Compliance &amp; Security Reporting</li></ul>
+            <a href="#contact" class="btn btn-ghost btn-block">Request Security Audit</a>
+          </article>
+          <article class="card service-card tilt-3d c4" data-reveal>
+            <div class="service-icon" aria-hidden="true">💳</div>
+            <h3 class="category-title">Fintech Development</h3>
+            <p>Payment gateways, financial dashboards, trading platforms, collection management systems. Built with security-first approach.</p>
+            <ul class="check-list"><li>Payment Gateway Integration (Razorpay, Stripe, PhonePe)</li><li>Financial Dashboard &amp; Analytics</li><li>Collection &amp; Recovery Management Systems</li><li>Trading &amp; Commodity Rate Trackers</li><li>PCI-DSS Compliant Architecture</li></ul>
+            <a href="#contact" class="btn btn-ghost btn-block">Get Quote for Fintech</a>
+          </article>
+          <article class="card service-card tilt-3d c5" data-reveal>
+            <div class="service-icon" aria-hidden="true">🔌</div>
+            <h3 class="category-title">API Development &amp; Integration</h3>
+            <p>RESTful APIs, GraphQL, third-party integrations, webhook systems, and microservices architecture.</p>
+            <ul class="check-list"><li>REST API Design &amp; Development (Django/Node)</li><li>GraphQL API Development</li><li>Third-party API Integration</li><li>Webhook &amp; Event-Driven Architecture</li><li>API Documentation (OpenAPI/Swagger)</li></ul>
+            <a href="#contact" class="btn btn-ghost btn-block">Get Quote for API Dev</a>
+          </article>
+          <article class="card service-card tilt-3d c6" data-reveal>
+            <div class="service-icon" aria-hidden="true">☁️</div>
+            <h3 class="category-title">DevOps &amp; Cloud Deployment</h3>
+            <p>CI/CD pipelines, Docker containerization, Nginx, Linux server management, GitHub Actions, monitoring &amp; scaling.</p>
+            <ul class="check-list"><li>Docker Containerization &amp; Orchestration</li><li>CI/CD with GitHub Actions / GitLab CI</li><li>Nginx Reverse Proxy &amp; Load Balancing</li><li>Linux Server Hardening (Debian/Ubuntu/Arch)</li><li>Monitoring, Logging &amp; Auto-scaling</li></ul>
+            <a href="#contact" class="btn btn-ghost btn-block">Get Quote for DevOps</a>
+          </article>
         </div>
 
-        <!-- Service Areas -->
-        <div style="margin-top:3rem; padding:2rem; background:var(--bg-card); border-radius:var(--radius-lg); border:1px solid var(--border-subtle);">
-          <h3 style="text-align:center; margin-bottom:1.5rem; font-size:1.5rem;">Service Areas — Based in Calicut, Working Globally</h3>
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; text-align:center;">
-            <div class="glass-card" style="padding:1.5rem;">
-              <div style="font-size:2rem; margin-bottom:0.5rem;">🏙️</div>
-              <strong>Calicut (Kozhikode)</strong><br>
-              <span style="font-size:0.85rem; color:var(--text-muted);">Primary Location</span>
-            </div>
-            <div class="glass-card" style="padding:1.5rem;">
-              <div style="font-size:2rem; margin-bottom:0.5rem;">🌴</div>
-              <strong>Kerala Cities</strong><br>
-              <span style="font-size:0.85rem; color:var(--text-muted);">Kochi, Thiruvananthapuram, Malappuram, Wayanad, Kannur, Thrissur</span>
-            </div>
-            <div class="glass-card" style="padding:1.5rem;">
-              <div style="font-size:2rem; margin-bottom:0.5rem;">🇮🇳</div>
-              <strong>Across India</strong><br>
-              <span style="font-size:0.85rem; color:var(--text-muted);">Bangalore, Mumbai, Delhi, Hyderabad, Chennai, Pune</span>
-            </div>
-            <div class="glass-card" style="padding:1.5rem;">
-              <div style="font-size:2rem; margin-bottom:0.5rem;">🌍</div>
-              <strong>Global Clients</strong><br>
-              <span style="font-size:0.85rem; color:var(--text-muted);">UAE, USA, UK, Europe, Australia, Singapore</span>
-            </div>
+        <div class="areas card" data-reveal>
+          <h3>Service Areas — Based in Calicut, Working Globally</h3>
+          <div class="areas-grid">
+            <div class="area c1"><span aria-hidden="true">🏙️</span><strong>Calicut (Kozhikode)</strong><small>Primary Location</small></div>
+            <div class="area c2"><span aria-hidden="true">🌴</span><strong>Kerala Cities</strong><small>Kochi, Thiruvananthapuram, Malappuram, Wayanad, Kannur, Thrissur</small></div>
+            <div class="area c3"><span aria-hidden="true">🇮🇳</span><strong>Across India</strong><small>Bangalore, Mumbai, Delhi, Hyderabad, Chennai, Pune</small></div>
+            <div class="area c4"><span aria-hidden="true">🌍</span><strong>Global Clients</strong><small>UAE, USA, UK, Europe, Australia, Singapore</small></div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- =======================================================
-         TESTIMONIALS & CLIENT REVIEWS (SEO: Social Proof)
+         TESTIMONIALS — tilted 3D track
          ======================================================= -->
-    <section id="testimonials" style="background:rgba(255,255,255,0.01);">
+    <section id="testimonials" class="section testimonials-section">
       <div class="container">
-        <div class="section-header" style="text-align:center; align-items:center;">
-          <div class="section-label">03C // Client Testimonials</div>
+        <div class="bigword" aria-hidden="true">LOVE</div>
+        <div class="section-header center" data-reveal>
+          <div class="section-label"><span class="label-dot"></span>03C // Client Testimonials</div>
           <h2 class="section-title">What Clients Say — Best Developer in Calicut</h2>
           <p class="section-desc">Real feedback from clients across Calicut, Kerala, India and globally who hired Muhammed Hadhi Havath for their projects.</p>
         </div>
-
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(350px, 1fr)); gap:1.5rem;">
-          <!-- Testimonial 1 -->
-          <div class="glass-card" style="padding:2rem;">
-            <div style="color:var(--primary); margin-bottom:1rem;">★★★★★</div>
-            <p style="font-size:1.05rem; line-height:1.7; color:var(--text-main); margin-bottom:1.5rem;">"Hadhi Havath delivered our enterprise Flutter app (Sha Collects) ahead of schedule with exceptional code quality. His expertise in fintech and security is unmatched in Calicut. The best developer we've worked with in Kerala."</p>
-            <div style="display:flex; align-items:center; gap:1rem;">
-              <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg, var(--primary), var(--accent)); display:flex; align-items:center; justify-content:center; font-weight:700; color:#06080d;">RK</div>
-              <div>
-                <div style="font-weight:600;">Rajesh Kumar</div>
-                <div style="font-size:0.85rem; color:var(--text-muted);">CTO, FinTech Startup — Calicut, Kerala</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Testimonial 2 -->
-          <div class="glass-card" style="padding:2rem;">
-            <div style="color:var(--primary); margin-bottom:1rem;">★★★★★</div>
-            <p style="font-size:1.05rem; line-height:1.7; color:var(--text-main); margin-bottom:1.5rem;">"RateTracker.in is our core product and Muhammed built it from scratch with Django. His understanding of real-time data, caching, and scalable architecture is top-tier. Highly recommend for any Python/Django project in Calicut."</p>
-            <div style="display:flex; align-items:center; gap:1rem;">
-              <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg, var(--accent), var(--primary)); display:flex; align-items:center; justify-content:center; font-weight:700; color:#06080d;">PM</div>
-              <div>
-                <div style="font-weight:600;">Priya Menon</div>
-                <div style="font-size:0.85rem; color:var(--text-muted);">Product Manager — Kochi, Kerala</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Testimonial 3 -->
-          <div class="glass-card" style="padding:2rem;">
-            <div style="color:var(--primary); margin-bottom:1rem;">★★★★★</div>
-            <p style="font-size:1.05rem; line-height:1.7; color:var(--text-main); margin-bottom:1.5rem;">"We hired Hadhi for a security audit of our API infrastructure. His OWASP knowledge and penetration testing skills revealed critical vulnerabilities we missed. Professional, thorough, and delivers actionable reports. Best security auditor in Calicut."</p>
-            <div style="display:flex; align-items:center; gap:1rem;">
-              <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg, #f59e0b, var(--primary)); display:flex; align-items:center; justify-content:center; font-weight:700; color:#06080d;">AS</div>
-              <div>
-                <div style="font-weight:600;">Arjun Sharma</div>
-                <div style="font-size:0.85rem; color:var(--text-muted);">Lead Engineer, SaaS Company — Bangalore, India</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Testimonial 4 -->
-          <div class="glass-card" style="padding:2rem;">
-            <div style="color:var(--primary); margin-bottom:1rem;">★★★★★</div>
-            <p style="font-size:1.05rem; line-height:1.7; color:var(--text-main); margin-bottom:1.5rem;">"Boutique Book was delivered with pixel-perfect UI and robust backend. Muhammed's communication throughout the project was excellent. He understands both technical and business requirements. Top Flutter developer in Kerala without doubt."</p>
-            <div style="display:flex; align-items:center; gap:1rem;">
-              <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg, #ec4899, var(--accent)); display:flex; align-items:center; justify-content:center; font-weight:700; color:#06080d;">SN</div>
-              <div>
-                <div style="font-weight:600;">Sneha Nair</div>
-                <div style="font-size:0.85rem; color:var(--text-muted);">Founder, Luxury Boutique — Kozhikode, Kerala</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Testimonial 5 -->
-          <div class="glass-card" style="padding:2rem;">
-            <div style="color:var(--primary); margin-bottom:1rem;">★★★★★</div>
-            <p style="font-size:1.05rem; line-height:1.7; color:var(--text-main); margin-bottom:1.5rem;">"Muhammed built our Sign Language Interpreter with computer vision. His ability to work with complex AI/ML pipelines and deploy to production is rare. He's not just a developer, he's a complete engineer. Best hire from Calicut we've made."</p>
-            <div style="display:flex; align-items:center; gap:1rem;">
-              <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg, #3b82f6, var(--primary)); display:flex; align-items:center; justify-content:center; font-weight:700; color:#06080d;">VK</div>
-              <div>
-                <div style="font-weight:600;">Vikram Krishnan</div>
-                <div style="font-size:0.85rem; color:var(--text-muted);">AI Research Lead — Hyderabad, India</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Testimonial 6 -->
-          <div class="glass-card" style="padding:2rem;">
-            <div style="color:var(--primary); margin-bottom:1rem;">★★★★★</div>
-            <p style="font-size:1.05rem; line-height:1.7; color:var(--text-main); margin-bottom:1.5rem;">"Working remotely with Hadhi from the US was seamless. He delivered our Django project on time, with clean code and excellent documentation. His timezone flexibility and communication skills make him ideal for international clients. Best developer from Calicut for global projects."</p>
-            <div style="display:flex; align-items:center; gap:1rem;">
-              <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg, #10b981, #06b6d4); display:flex; align-items:center; justify-content:center; font-weight:700; color:#06080d;">JD</div>
-              <div>
-                <div style="font-weight:600;">James Davidson</div>
-                <div style="font-size:0.85rem; color:var(--text-muted);">CTO, HealthTech Startup — San Francisco, USA</div>
-              </div>
-            </div>
-          </div>
+      </div>
+      <div class="track-scene">
+        <div class="track" id="testimonial-track">
+          <figure class="card testimonial-card c1">
+            <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+            <blockquote>"Hadhi Havath delivered our enterprise Flutter app (Sha Collects) ahead of schedule with exceptional code quality. His expertise in fintech and security is unmatched in Calicut. The best developer we&#x27;ve worked with in Kerala."</blockquote>
+            <figcaption><span class="avatar-ini" aria-hidden="true">RK</span><span><strong>Rajesh Kumar</strong><small>CTO, FinTech Startup — Calicut, Kerala</small></span></figcaption>
+          </figure>
+          <figure class="card testimonial-card c2">
+            <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+            <blockquote>"RateTracker.in is our core product and Muhammed built it from scratch with Django. His understanding of real-time data, caching, and scalable architecture is top-tier. Highly recommend for any Python/Django project in Calicut."</blockquote>
+            <figcaption><span class="avatar-ini" aria-hidden="true">PM</span><span><strong>Priya Menon</strong><small>Product Manager — Kochi, Kerala</small></span></figcaption>
+          </figure>
+          <figure class="card testimonial-card c3">
+            <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+            <blockquote>"We hired Hadhi for a security audit of our API infrastructure. His OWASP knowledge and penetration testing skills revealed critical vulnerabilities we missed. Professional, thorough, and delivers actionable reports. Best security auditor in Calicut."</blockquote>
+            <figcaption><span class="avatar-ini" aria-hidden="true">AS</span><span><strong>Arjun Sharma</strong><small>Lead Engineer, SaaS Company — Bangalore, India</small></span></figcaption>
+          </figure>
+          <figure class="card testimonial-card c4">
+            <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+            <blockquote>"Boutique Book was delivered with pixel-perfect UI and robust backend. Muhammed&#x27;s communication throughout the project was excellent. He understands both technical and business requirements. Top Flutter developer in Kerala without doubt."</blockquote>
+            <figcaption><span class="avatar-ini" aria-hidden="true">SN</span><span><strong>Sneha Nair</strong><small>Founder, Luxury Boutique — Kozhikode, Kerala</small></span></figcaption>
+          </figure>
+          <figure class="card testimonial-card c5">
+            <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+            <blockquote>"Muhammed built our Sign Language Interpreter with computer vision. His ability to work with complex AI/ML pipelines and deploy to production is rare. He&#x27;s not just a developer, he&#x27;s a complete engineer. Best hire from Calicut we&#x27;ve made."</blockquote>
+            <figcaption><span class="avatar-ini" aria-hidden="true">VK</span><span><strong>Vikram Krishnan</strong><small>AI Research Lead — Hyderabad, India</small></span></figcaption>
+          </figure>
+          <figure class="card testimonial-card c6">
+            <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+            <blockquote>"Working remotely with Hadhi from the US was seamless. He delivered our Django project on time, with clean code and excellent documentation. His timezone flexibility and communication skills make him ideal for international clients. Best developer from Calicut for global projects."</blockquote>
+            <figcaption><span class="avatar-ini" aria-hidden="true">JD</span><span><strong>James Davidson</strong><small>CTO, HealthTech Startup — San Francisco, USA</small></span></figcaption>
+          </figure>
         </div>
       </div>
     </section>
 
     <!-- =======================================================
-         CERTIFICATIONS & ACHIEVEMENTS (SEO: Authority Signals)
+         CERTIFICATIONS — flip cards
          ======================================================= -->
-    <section id="certifications">
+    <section id="certifications" class="section">
       <div class="container">
-        <div class="section-header" style="text-align:center; align-items:center;">
-          <div class="section-label">03D // Certifications & Achievements</div>
-          <h2 class="section-title">Certifications & Professional Credentials</h2>
+        <div class="bigword" aria-hidden="true">AWARDS</div>
+        <div class="section-header center" data-reveal>
+          <div class="section-label"><span class="label-dot"></span>03D // Certifications &amp; Achievements</div>
+          <h2 class="section-title">Certifications &amp; Professional Credentials</h2>
           <p class="section-desc">Continuous learning and industry-recognized certifications validating expertise as the best developer in Calicut.</p>
         </div>
-
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem;">
-          <div class="glass-card" style="padding:2rem; text-align:center;">
-            <div style="font-size:3rem; margin-bottom:1rem;">🏆</div>
-            <h3 style="font-size:1.2rem; margin-bottom:0.5rem;">Best Developer Portfolio Calicut 2024</h3>
-            <p style="color:var(--text-muted); font-size:0.9rem;">Awarded for exceptional portfolio showcasing full-stack, mobile, and security projects</p>
+        <div class="cert-grid">
+          <div class="flip-card c1" data-reveal tabindex="0">
+            <div class="flip-inner">
+              <div class="flip-face flip-front"><span class="cert-icon" aria-hidden="true">🏆</span><h3>Best Developer Portfolio Calicut 2024</h3><span class="flip-hint" aria-hidden="true">Tap to flip ↻</span></div>
+              <div class="flip-face flip-back"><p>Awarded for exceptional portfolio showcasing full-stack, mobile, and security projects</p></div>
+            </div>
           </div>
-          <div class="glass-card" style="padding:2rem; text-align:center;">
-            <div style="font-size:3rem; margin-bottom:1rem;">🐍</div>
-            <h3 style="font-size:1.2rem; margin-bottom:0.5rem;">Top Python Developer Kerala 2024</h3>
-            <p style="color:var(--text-muted); font-size:0.9rem;">Recognized for Django, FastAPI, and Python systems engineering excellence</p>
+          <div class="flip-card c2" data-reveal tabindex="0">
+            <div class="flip-inner">
+              <div class="flip-face flip-front"><span class="cert-icon" aria-hidden="true">🐍</span><h3>Top Python Developer Kerala 2024</h3><span class="flip-hint" aria-hidden="true">Tap to flip ↻</span></div>
+              <div class="flip-face flip-back"><p>Recognized for Django, FastAPI, and Python systems engineering excellence</p></div>
+            </div>
           </div>
-          <div class="glass-card" style="padding:2rem; text-align:center;">
-            <div style="font-size:3rem; margin-bottom:1rem;">📱</div>
-            <h3 style="font-size:1.2rem; margin-bottom:0.5rem;">Flutter Excellence Award Calicut</h3>
-            <p style="color:var(--text-muted); font-size:0.9rem;">Enterprise Flutter app development with fintech & offline-first architecture</p>
+          <div class="flip-card c3" data-reveal tabindex="0">
+            <div class="flip-inner">
+              <div class="flip-face flip-front"><span class="cert-icon" aria-hidden="true">📱</span><h3>Flutter Excellence Award Calicut</h3><span class="flip-hint" aria-hidden="true">Tap to flip ↻</span></div>
+              <div class="flip-face flip-back"><p>Enterprise Flutter app development with fintech &amp; offline-first architecture</p></div>
+            </div>
           </div>
-          <div class="glass-card" style="padding:2rem; text-align:center;">
-            <div style="font-size:3rem; margin-bottom:1rem;">🛡️</div>
-            <h3 style="font-size:1.2rem; margin-bottom:0.5rem;">OWASP Security Practitioner</h3>
-            <p style="color:var(--text-muted); font-size:0.9rem;">Applied OWASP Top 10, ASVS, and MASVS in production security audits</p>
+          <div class="flip-card c4" data-reveal tabindex="0">
+            <div class="flip-inner">
+              <div class="flip-face flip-front"><span class="cert-icon" aria-hidden="true">🛡️</span><h3>OWASP Security Practitioner</h3><span class="flip-hint" aria-hidden="true">Tap to flip ↻</span></div>
+              <div class="flip-face flip-back"><p>Applied OWASP Top 10, ASVS, and MASVS in production security audits</p></div>
+            </div>
           </div>
-          <div class="glass-card" style="padding:2rem; text-align:center;">
-            <div style="font-size:3rem; margin-bottom:1rem;">🎓</div>
-            <h3 style="font-size:1.2rem; margin-bottom:0.5rem;">BCA — University of Calicut</h3>
-            <p style="color:var(--text-muted); font-size:0.9rem;">Bachelor of Computer Application with focus on Systems Engineering</p>
+          <div class="flip-card c5" data-reveal tabindex="0">
+            <div class="flip-inner">
+              <div class="flip-face flip-front"><span class="cert-icon" aria-hidden="true">🎓</span><h3>BCA — University of Calicut</h3><span class="flip-hint" aria-hidden="true">Tap to flip ↻</span></div>
+              <div class="flip-face flip-back"><p>Bachelor of Computer Application with focus on Systems Engineering</p></div>
+            </div>
           </div>
-          <div class="glass-card" style="padding:2rem; text-align:center;">
-            <div style="font-size:3rem; margin-bottom:1rem;">💻</div>
-            <h3 style="font-size:1.2rem; margin-bottom:0.5rem;">40+ Production Repositories</h3>
-            <p style="color:var(--text-muted); font-size:0.9rem;">Open-source and private projects on GitHub with 100% production stability</p>
+          <div class="flip-card c6" data-reveal tabindex="0">
+            <div class="flip-inner">
+              <div class="flip-face flip-front"><span class="cert-icon" aria-hidden="true">💻</span><h3>40+ Production Repositories</h3><span class="flip-hint" aria-hidden="true">Tap to flip ↻</span></div>
+              <div class="flip-face flip-back"><p>Open-source and private projects on GitHub with 100% production stability</p></div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- =======================================================
-         PROJECTS ARCHIVE & SHOWCASE
+         PROJECTS
          ======================================================= -->
-    <section id="projects">
+    <section id="projects" class="section">
       <div class="container">
-        <div class="section-header">
-          <div class="section-label">04 // Featured Portfolio</div>
-          <h2 class="section-title">Projects by Best Developer in Calicut — Open Source & Production Apps</h2>
-          <p class="section-desc">Production applications, mobile tools, fintech solutions, and systems security utilities authored by Muhammed Hadhi Havath, the best full stack developer in Calicut, Kerala. 12+ projects spanning Flutter, Django, React, Security & AI.</p>
+        <div class="bigword" aria-hidden="true">WORK</div>
+        <div class="section-header" data-reveal>
+          <div class="section-label"><span class="label-dot"></span>04 // Featured Portfolio</div>
+          <h2 class="section-title">Projects by Best Developer in Calicut — Open Source &amp; Production Apps</h2>
+          <p class="section-desc">Production applications, mobile tools, fintech solutions, and systems security utilities authored by Muhammed Hadhi Havath, the best full stack developer in Calicut, Kerala. 12+ projects spanning Flutter, Django, React, Security &amp; AI.</p>
         </div>
 
-        <!-- Filter Buttons -->
         <div class="project-filters-bar" role="tablist" aria-label="Project Category Filters">
           <button class="filter-btn active" data-filter="all">All Projects (12)</button>
-          <button class="filter-btn" data-filter="mobile">Mobile & Flutter</button>
-          <button class="filter-btn" data-filter="fullstack">Full Stack & Web</button>
-          <button class="filter-btn" data-filter="security">Security & Systems</button>
-          <button class="filter-btn" data-filter="ai">AI & Utilities</button>
+          <button class="filter-btn" data-filter="mobile">Mobile &amp; Flutter</button>
+          <button class="filter-btn" data-filter="fullstack">Full Stack &amp; Web</button>
+          <button class="filter-btn" data-filter="security">Security &amp; Systems</button>
+          <button class="filter-btn" data-filter="ai">AI &amp; Utilities</button>
         </div>
 
-        <!-- Project Grid -->
         <div class="projects-grid">
-
-          <!-- Project 1: Sha Collects -->
-          <article class="glass-card project-card" data-category="mobile fullstack">
-            <div>
+          <article class="card project-card tilt-3d c1" data-category="mobile fullstack">
+            <div class="project-cover" aria-hidden="true"><span class="project-emoji">💸</span><span class="cover-shape s1"></span><span class="cover-shape s2"></span></div>
+            <div class="project-body">
               <div class="project-card-header">
                 <span class="project-badge">Mobile · Flutter · Enterprise</span>
-                <div class="project-links">
-                  <a href="https://github.com/hadhihavath/shacollect" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="View Source on GitHub">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                  </a>
-                </div>
+                <div class="project-links"><a href="https://github.com/hadhihavath/shacollect" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="View source on GitHub" aria-label="Sha Collects on GitHub"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a></div>
               </div>
               <h3 class="project-title">Sha Collects</h3>
-              <p class="project-desc">
-                Enterprise route cash recovery and daily collection management system. Streamlines field recovery agents, ledger synchronization, receipt generation, and real-time reconciliation.
-              </p>
-            </div>
-            <div class="project-tech-stack">
-              <span class="project-tech-pill">Flutter</span>
-              <span class="project-tech-pill">Dart</span>
-              <span class="project-tech-pill">Firebase</span>
-              <span class="project-tech-pill">Route Telemetry</span>
+              <p class="project-desc">Enterprise route cash recovery and daily collection management system. Streamlines field recovery agents, ledger synchronization, receipt generation, and real-time reconciliation.</p>
+              <div class="project-tech-stack"><span class="project-tech-pill">Flutter</span><span class="project-tech-pill">Dart</span><span class="project-tech-pill">Firebase</span><span class="project-tech-pill">Route Telemetry</span></div>
             </div>
           </article>
-
-          <!-- Project 2: RateTracker.in -->
-          <article class="glass-card project-card" data-category="fullstack">
-            <div>
+          <article class="card project-card tilt-3d c2" data-category="fullstack">
+            <div class="project-cover" aria-hidden="true"><span class="project-emoji">📈</span><span class="cover-shape s1"></span><span class="cover-shape s2"></span></div>
+            <div class="project-body">
               <div class="project-card-header">
                 <span class="project-badge">Production · Django · Web</span>
-                <div class="project-links">
-                  <a href="https://ratetracker.in" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="Open Live Site">↗</a>
-                  <a href="https://github.com/hadhihavath/ratetracker.in" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="GitHub Repo">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                  </a>
-                </div>
+                <div class="project-links"><a href="https://ratetracker.in" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="Open live site" aria-label="Open RateTracker.in live">↗</a><a href="https://github.com/hadhihavath/ratetracker.in" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="View source on GitHub" aria-label="RateTracker.in on GitHub"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a></div>
               </div>
               <h3 class="project-title">RateTracker.in</h3>
-              <p class="project-desc">
-                Live market rate tracker monitoring gold, commodities, and currency benchmarks with periodic background scraping, caching, and reactive charts.
-              </p>
-            </div>
-            <div class="project-tech-stack">
-              <span class="project-tech-pill">Python</span>
-              <span class="project-tech-pill">Django</span>
-              <span class="project-tech-pill">Tailwind CSS</span>
-              <span class="project-tech-pill">REST APIs</span>
+              <p class="project-desc">Live market rate tracker monitoring gold, commodities, and currency benchmarks with periodic background scraping, caching, and reactive charts.</p>
+              <div class="project-tech-stack"><span class="project-tech-pill">Python</span><span class="project-tech-pill">Django</span><span class="project-tech-pill">Tailwind CSS</span><span class="project-tech-pill">REST APIs</span></div>
             </div>
           </article>
-
-          <!-- Project 3: Boutique Book -->
-          <article class="glass-card project-card" data-category="fullstack">
-            <div>
+          <article class="card project-card tilt-3d c3" data-category="fullstack">
+            <div class="project-cover" aria-hidden="true"><span class="project-emoji">👗</span><span class="cover-shape s1"></span><span class="cover-shape s2"></span></div>
+            <div class="project-body">
               <div class="project-card-header">
                 <span class="project-badge">Client Portal · Web App</span>
-                <div class="project-links">
-                  <a href="https://hadhihavath.github.io/boutique_book/" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="Open Demo">↗</a>
-                  <a href="https://github.com/hadhihavath/boutique_book" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="GitHub Repo">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                  </a>
-                </div>
+                <div class="project-links"><a href="https://hadhihavath.github.io/boutique_book/" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="Open live site" aria-label="Open Boutique Book live">↗</a><a href="https://github.com/hadhihavath/boutique_book" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="View source on GitHub" aria-label="Boutique Book on GitHub"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a></div>
               </div>
               <h3 class="project-title">Boutique Book</h3>
-              <p class="project-desc">
-                Comprehensive reservation and client management solution designed for luxury boutiques. Features interactive calendars, appointment scheduling, and order tracking.
-              </p>
-            </div>
-            <div class="project-tech-stack">
-              <span class="project-tech-pill">JavaScript</span>
-              <span class="project-tech-pill">HTML5</span>
-              <span class="project-tech-pill">CSS3</span>
-              <span class="project-tech-pill">Scheduling</span>
+              <p class="project-desc">Comprehensive reservation and client management solution designed for luxury boutiques. Features interactive calendars, appointment scheduling, and order tracking.</p>
+              <div class="project-tech-stack"><span class="project-tech-pill">JavaScript</span><span class="project-tech-pill">HTML5</span><span class="project-tech-pill">CSS3</span><span class="project-tech-pill">Scheduling</span></div>
             </div>
           </article>
-
-          <!-- Project 4: Sign Language Interpreter -->
-          <article class="glass-card project-card" data-category="ai">
-            <div>
+          <article class="card project-card tilt-3d c4" data-category="ai">
+            <div class="project-cover" aria-hidden="true"><span class="project-emoji">🤟</span><span class="cover-shape s1"></span><span class="cover-shape s2"></span></div>
+            <div class="project-body">
               <div class="project-card-header">
                 <span class="project-badge">AI / ML · Computer Vision</span>
-                <div class="project-links">
-                  <a href="https://github.com/hadhihavath" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="GitHub Repo">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                  </a>
-                </div>
+                <div class="project-links"><a href="https://github.com/hadhihavath" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="View source on GitHub" aria-label="Sign Language Interpreter on GitHub"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a></div>
               </div>
               <h3 class="project-title">Sign Language Interpreter</h3>
-              <p class="project-desc">
-                Real-time gesture-to-speech translation pipeline using neural vision landmarks. Translates manual signs directly into textual and audio representation.
-              </p>
-            </div>
-            <div class="project-tech-stack">
-              <span class="project-tech-pill">Python</span>
-              <span class="project-tech-pill">OpenCV</span>
-              <span class="project-tech-pill">Neural Models</span>
-              <span class="project-tech-pill">MediaPipe</span>
+              <p class="project-desc">Real-time gesture-to-speech translation pipeline using neural vision landmarks. Translates manual signs directly into textual and audio representation.</p>
+              <div class="project-tech-stack"><span class="project-tech-pill">Python</span><span class="project-tech-pill">OpenCV</span><span class="project-tech-pill">Neural Models</span><span class="project-tech-pill">MediaPipe</span></div>
             </div>
           </article>
-
-          <!-- Project 5: Steel Mountain HVAC Exploit Simulator -->
-          <article class="glass-card project-card" data-category="security">
-            <div>
+          <article class="card project-card tilt-3d c5" data-category="security">
+            <div class="project-cover" aria-hidden="true"><span class="project-emoji">🌡️</span><span class="cover-shape s1"></span><span class="cover-shape s2"></span></div>
+            <div class="project-body">
               <div class="project-card-header">
                 <span class="project-badge">Security Research · Systems Audit</span>
-                <div class="project-links">
-                  <a href="https://github.com/hadhihavath/steel-mountain-hvac" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="GitHub Repo">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                  </a>
-                </div>
+                <div class="project-links"><a href="https://github.com/hadhihavath/steel-mountain-hvac" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="View source on GitHub" aria-label="Steel Mountain HVAC on GitHub"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a></div>
               </div>
               <h3 class="project-title">Steel Mountain HVAC</h3>
-              <p class="project-desc">
-                HVAC climate control override exploit simulation. Models physical magnetic tape storage archive degradation through ambient temperature manipulation. For audit and research purposes only.
-              </p>
-            </div>
-            <div class="project-tech-stack">
-              <span class="project-tech-pill">Python</span>
-              <span class="project-tech-pill">AppSec</span>
-              <span class="project-tech-pill">SCADA Models</span>
-              <span class="project-tech-pill">Audit Tool</span>
+              <p class="project-desc">HVAC climate control override exploit simulation. Models physical magnetic tape storage archive degradation through ambient temperature manipulation. For audit and research purposes only.</p>
+              <div class="project-tech-stack"><span class="project-tech-pill">Python</span><span class="project-tech-pill">AppSec</span><span class="project-tech-pill">SCADA Models</span><span class="project-tech-pill">Audit Tool</span></div>
             </div>
           </article>
-
-          <!-- Project 6: Jarvis AI Assistant -->
-          <article class="glass-card project-card" data-category="ai">
-            <div>
+          <article class="card project-card tilt-3d c6" data-category="ai">
+            <div class="project-cover" aria-hidden="true"><span class="project-emoji">🎙️</span><span class="cover-shape s1"></span><span class="cover-shape s2"></span></div>
+            <div class="project-body">
               <div class="project-card-header">
                 <span class="project-badge">Automation · AI Voice</span>
-                <div class="project-links">
-                  <a href="https://github.com/hadhihavath/jarvis" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="GitHub Repo">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                  </a>
-                </div>
+                <div class="project-links"><a href="https://github.com/hadhihavath/jarvis" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="View source on GitHub" aria-label="Jarvis AI Assistant on GitHub"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a></div>
               </div>
               <h3 class="project-title">Jarvis AI Assistant</h3>
-              <p class="project-desc">
-                Personal AI workstation assistant featuring voice recognition, modular task skills, schedule automation, and local shell execution wrappers.
-              </p>
-            </div>
-            <div class="project-tech-stack">
-              <span class="project-tech-pill">Python</span>
-              <span class="project-tech-pill">Speech Recognition</span>
-              <span class="project-tech-pill">Automation</span>
-              <span class="project-tech-pill">Sockets</span>
+              <p class="project-desc">Personal AI workstation assistant featuring voice recognition, modular task skills, schedule automation, and local shell execution wrappers.</p>
+              <div class="project-tech-stack"><span class="project-tech-pill">Python</span><span class="project-tech-pill">Speech Recognition</span><span class="project-tech-pill">Automation</span><span class="project-tech-pill">Sockets</span></div>
             </div>
           </article>
-
-          <!-- Project 7: QTrendz -->
-          <article class="glass-card project-card" data-category="fullstack">
-            <div>
+          <article class="card project-card tilt-3d c1" data-category="fullstack">
+            <div class="project-cover" aria-hidden="true"><span class="project-emoji">🛍️</span><span class="cover-shape s1"></span><span class="cover-shape s2"></span></div>
+            <div class="project-body">
               <div class="project-card-header">
                 <span class="project-badge">E-Commerce · Fintech</span>
-                <div class="project-links">
-                  <a href="https://github.com/hadhihavath/qtrendz" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="GitHub Repo">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                  </a>
-                </div>
+                <div class="project-links"><a href="https://github.com/hadhihavath/qtrendz" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="View source on GitHub" aria-label="QTrendz on GitHub"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a></div>
               </div>
               <h3 class="project-title">QTrendz</h3>
-              <p class="project-desc">
-                High-converting e-commerce web application with product catalogs, shopping cart state management, and streamlined checkout flows integrating payment gateways.
-              </p>
-            </div>
-            <div class="project-tech-stack">
-              <span class="project-tech-pill">TypeScript</span>
-              <span class="project-tech-pill">React</span>
-              <span class="project-tech-pill">Payment Gateways</span>
-              <span class="project-tech-pill">Tailwind</span>
+              <p class="project-desc">High-converting e-commerce web application with product catalogs, shopping cart state management, and streamlined checkout flows integrating payment gateways.</p>
+              <div class="project-tech-stack"><span class="project-tech-pill">TypeScript</span><span class="project-tech-pill">React</span><span class="project-tech-pill">Payment Gateways</span><span class="project-tech-pill">Tailwind</span></div>
             </div>
           </article>
-
-          <!-- Project 8: StrangerChat & HavChat -->
-          <article class="glass-card project-card" data-category="fullstack">
-            <div>
+          <article class="card project-card tilt-3d c2" data-category="fullstack">
+            <div class="project-cover" aria-hidden="true"><span class="project-emoji">💬</span><span class="cover-shape s1"></span><span class="cover-shape s2"></span></div>
+            <div class="project-body">
               <div class="project-card-header">
                 <span class="project-badge">WebSockets · Realtime</span>
-                <div class="project-links">
-                  <a href="https://github.com/hadhihavath/strangerchat" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="GitHub Repo">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                  </a>
-                </div>
+                <div class="project-links"><a href="https://github.com/hadhihavath/strangerchat" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="View source on GitHub" aria-label="StrangerChat / HavChat on GitHub"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a></div>
               </div>
               <h3 class="project-title">StrangerChat / HavChat</h3>
-              <p class="project-desc">
-                Zero-retention 1:1 real-time anonymous chat room service. Built over duplex WebSockets with ephemeral rooms and instant peer disconnection cleanup.
-              </p>
-            </div>
-            <div class="project-tech-stack">
-              <span class="project-tech-pill">Node.js</span>
-              <span class="project-tech-pill">WebSockets</span>
-              <span class="project-tech-pill">JavaScript</span>
-              <span class="project-tech-pill">Privacy First</span>
+              <p class="project-desc">Zero-retention 1:1 real-time anonymous chat room service. Built over duplex WebSockets with ephemeral rooms and instant peer disconnection cleanup.</p>
+              <div class="project-tech-stack"><span class="project-tech-pill">Node.js</span><span class="project-tech-pill">WebSockets</span><span class="project-tech-pill">JavaScript</span><span class="project-tech-pill">Privacy First</span></div>
             </div>
           </article>
-
-          <!-- Project 9: Disk Cleaner Utility -->
-          <article class="glass-card project-card" data-category="security ai">
-            <div>
+          <article class="card project-card tilt-3d c3" data-category="security ai">
+            <div class="project-cover" aria-hidden="true"><span class="project-emoji">🧹</span><span class="cover-shape s1"></span><span class="cover-shape s2"></span></div>
+            <div class="project-body">
               <div class="project-card-header">
                 <span class="project-badge">Systems Tool · Utility</span>
-                <div class="project-links">
-                  <a href="https://github.com/hadhihavath/disk-cleaner" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="GitHub Repo">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                  </a>
-                </div>
+                <div class="project-links"><a href="https://github.com/hadhihavath/disk-cleaner" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="View source on GitHub" aria-label="Disk Cleaner on GitHub"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a></div>
               </div>
               <h3 class="project-title">Disk Cleaner</h3>
-              <p class="project-desc">
-                Cross-platform disk analyzer and junk file purger. Scans system caches, dangling dependencies, and orphaned temporary files with safety validation.
-              </p>
-            </div>
-            <div class="project-tech-stack">
-              <span class="project-tech-pill">TypeScript</span>
-              <span class="project-tech-pill">Node CLI</span>
-              <span class="project-tech-pill">FS Telemetry</span>
+              <p class="project-desc">Cross-platform disk analyzer and junk file purger. Scans system caches, dangling dependencies, and orphaned temporary files with safety validation.</p>
+              <div class="project-tech-stack"><span class="project-tech-pill">TypeScript</span><span class="project-tech-pill">Node CLI</span><span class="project-tech-pill">FS Telemetry</span></div>
             </div>
           </article>
-
-          <!-- Project 10: Madaneeyam Portal Suite -->
-          <article class="glass-card project-card" data-category="fullstack">
-            <div>
+          <article class="card project-card tilt-3d c4" data-category="fullstack">
+            <div class="project-cover" aria-hidden="true"><span class="project-emoji">🏫</span><span class="cover-shape s1"></span><span class="cover-shape s2"></span></div>
+            <div class="project-body">
               <div class="project-card-header">
                 <span class="project-badge">Production · Institutional</span>
-                <div class="project-links">
-                  <a href="https://github.com/hadhihavath/madaneeyam" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="GitHub Repo">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                  </a>
-                </div>
+                <div class="project-links"><a href="https://github.com/hadhihavath/madaneeyam" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="View source on GitHub" aria-label="Madaneeyam &amp; Ceemmadaneeyam on GitHub"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a></div>
               </div>
-              <h3 class="project-title">Madaneeyam & Ceemmadaneeyam</h3>
-              <p class="project-desc">
-                Comprehensive digital web portal suite serving educational institutions and communities with event management, admissions records, and administrative dashboards.
-              </p>
-            </div>
-            <div class="project-tech-stack">
-              <span class="project-tech-pill">TypeScript</span>
-              <span class="project-tech-pill">JavaScript</span>
-              <span class="project-tech-pill">HTML5</span>
-              <span class="project-tech-pill">Cloud Host</span>
+              <h3 class="project-title">Madaneeyam &amp; Ceemmadaneeyam</h3>
+              <p class="project-desc">Comprehensive digital web portal suite serving educational institutions and communities with event management, admissions records, and administrative dashboards.</p>
+              <div class="project-tech-stack"><span class="project-tech-pill">TypeScript</span><span class="project-tech-pill">JavaScript</span><span class="project-tech-pill">HTML5</span><span class="project-tech-pill">Cloud Host</span></div>
             </div>
           </article>
-
-          <!-- Project 11: Wi-Fi Security Check -->
-          <article class="glass-card project-card" data-category="security">
-            <div>
+          <article class="card project-card tilt-3d c5" data-category="security">
+            <div class="project-cover" aria-hidden="true"><span class="project-emoji">📶</span><span class="cover-shape s1"></span><span class="cover-shape s2"></span></div>
+            <div class="project-body">
               <div class="project-card-header">
                 <span class="project-badge">Security · Wireless Audit</span>
-                <div class="project-links">
-                  <a href="https://github.com/hadhihavath/wifi-security-check" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="GitHub Repo">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                  </a>
-                </div>
+                <div class="project-links"><a href="https://github.com/hadhihavath/wifi-security-check" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="View source on GitHub" aria-label="Wi-Fi Security Check on GitHub"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a></div>
               </div>
               <h3 class="project-title">Wi-Fi Security Check</h3>
-              <p class="project-desc">
-                Audits nearby wireless access points for weak WPA configurations, open administrative ports, rogue AP indicators, and signal vulnerabilities.
-              </p>
-            </div>
-            <div class="project-tech-stack">
-              <span class="project-tech-pill">Network Security</span>
-              <span class="project-tech-pill">Protocol Audit</span>
-              <span class="project-tech-pill">Security Heuristics</span>
+              <p class="project-desc">Audits nearby wireless access points for weak WPA configurations, open administrative ports, rogue AP indicators, and signal vulnerabilities.</p>
+              <div class="project-tech-stack"><span class="project-tech-pill">Network Security</span><span class="project-tech-pill">Protocol Audit</span><span class="project-tech-pill">Security Heuristics</span></div>
             </div>
           </article>
-
-          <!-- Project 12: Emojicrypt & CLab -->
-          <article class="glass-card project-card" data-category="security">
-            <div>
+          <article class="card project-card tilt-3d c6" data-category="security">
+            <div class="project-cover" aria-hidden="true"><span class="project-emoji">🔐</span><span class="cover-shape s1"></span><span class="cover-shape s2"></span></div>
+            <div class="project-body">
               <div class="project-card-header">
                 <span class="project-badge">Cryptography · C Systems</span>
-                <div class="project-links">
-                  <a href="https://github.com/hadhihavath/emojicrypt" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="GitHub Repo">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                  </a>
-                </div>
+                <div class="project-links"><a href="https://github.com/hadhihavath/emojicrypt" target="_blank" rel="noopener noreferrer" class="project-icon-link" title="View source on GitHub" aria-label="Emojicrypt &amp; CLab on GitHub"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a></div>
               </div>
-              <h3 class="project-title">Emojicrypt & CLab</h3>
-              <p class="project-desc">
-                Experimental cryptographic cipher algorithms and C laboratory exploring binary search trees, custom relational structures, and memory-safe cryptography.
-              </p>
-            </div>
-            <div class="project-tech-stack">
-              <span class="project-tech-pill">C</span>
-              <span class="project-tech-pill">Cryptography</span>
-              <span class="project-tech-pill">Data Structures</span>
+              <h3 class="project-title">Emojicrypt &amp; CLab</h3>
+              <p class="project-desc">Experimental cryptographic cipher algorithms and C laboratory exploring binary search trees, custom relational structures, and memory-safe cryptography.</p>
+              <div class="project-tech-stack"><span class="project-tech-pill">C</span><span class="project-tech-pill">Cryptography</span><span class="project-tech-pill">Data Structures</span></div>
             </div>
           </article>
-
         </div>
       </div>
     </section>
 
     <!-- =======================================================
-         EXPERIENCE & EDUCATION TIMELINE
+         EXPERIENCE
          ======================================================= -->
-    <section id="experience">
+    <section id="experience" class="section">
       <div class="container">
-        <div class="section-header" style="text-align:center; align-items:center;">
-          <div class="section-label">05 // Professional Trajectory</div>
-          <h2 class="section-title">Experience & Credentials — Best Developer in Calicut</h2>
+        <div class="bigword" aria-hidden="true">JOURNEY</div>
+        <div class="section-header center" data-reveal>
+          <div class="section-label"><span class="label-dot"></span>05 // Professional Trajectory</div>
+          <h2 class="section-title">Experience &amp; Credentials — Best Developer in Calicut</h2>
           <p class="section-desc">The educational foundations and engineering milestones of Muhammed Hadhi Havath, the best developer in Calicut, Kerala. 5+ years building production systems across Calicut, Kozhikode, Kerala, India and globally.</p>
         </div>
 
-        <div class="timeline-list">
-          <!-- Timeline 1: Independent Full Stack Engineer -->
-          <div class="timeline-item">
-            <span class="timeline-marker"></span>
-            <div class="glass-card timeline-card">
-              <div class="timeline-meta">
-                <h3 class="timeline-role">Full Stack Developer & Systems Engineer — Best Developer in Calicut</h3>
-                <span class="timeline-period">2023 – Present</span>
-              </div>
+        <div class="timeline" id="timeline">
+          <div class="timeline-line" aria-hidden="true"><span id="timeline-fill"></span></div>
+          <div class="timeline-item left">
+            <span class="timeline-marker c1" aria-hidden="true">🚀</span>
+            <div class="card timeline-card">
+              <span class="timeline-period">2023 – Present</span>
+              <h3 class="timeline-role">Full Stack Developer &amp; Systems Engineer — Best Developer in Calicut</h3>
               <div class="timeline-org">Independent Engineering · Calicut (Kozhikode), Kerala, India</div>
-              <p class="timeline-details">
-                Architecting and delivering production-ready web and mobile applications including <strong>Sha Collects</strong> (enterprise route cash collection management in Flutter) and <strong>RateTracker.in</strong> (live commodities monitor in Django). Conducting codebase security audits, implementing OWASP defenses, and structuring clean RESTful API services. Serving clients across Calicut, Kerala, India and globally.
-              </p>
+              <p class="timeline-details">Architecting and delivering production-ready web and mobile applications including <strong>Sha Collects</strong> (enterprise route cash collection management in Flutter) and <strong>RateTracker.in</strong> (live commodities monitor in Django). Conducting codebase security audits, implementing OWASP defenses, and structuring clean RESTful API services. Serving clients across Calicut, Kerala, India and globally.</p>
             </div>
           </div>
-
-          <!-- Timeline 2: Bachelor of Computer Application -->
-          <div class="timeline-item">
-            <span class="timeline-marker"></span>
-            <div class="glass-card timeline-card">
-              <div class="timeline-meta">
-                <h3 class="timeline-role">Bachelor of Computer Application (BCA)</h3>
-                <span class="timeline-period">University of Calicut</span>
-              </div>
+          <div class="timeline-item right">
+            <span class="timeline-marker c2" aria-hidden="true">🎓</span>
+            <div class="card timeline-card">
+              <span class="timeline-period">University of Calicut</span>
+              <h3 class="timeline-role">Bachelor of Computer Application (BCA)</h3>
               <div class="timeline-org">University of Calicut · Calicut, Kerala, India</div>
-              <p class="timeline-details">
-                Graduated with a comprehensive computer science curriculum encompassing Data Structures, Object-Oriented Analysis, Relational Database Management Systems, Computer Networks, and Operating Systems Architecture. Foundation for becoming the best developer in Calicut.
-              </p>
+              <p class="timeline-details">Graduated with a comprehensive computer science curriculum encompassing Data Structures, Object-Oriented Analysis, Relational Database Management Systems, Computer Networks, and Operating Systems Architecture. Foundation for becoming the best developer in Calicut.</p>
             </div>
           </div>
-
-          <!-- Timeline 3: Systems & Security Foundations -->
-          <div class="timeline-item">
-            <span class="timeline-marker"></span>
-            <div class="glass-card timeline-card">
-              <div class="timeline-meta">
-                <h3 class="timeline-role">Security Researcher & Open Source Contributor</h3>
-                <span class="timeline-period">2020 – 2023</span>
-              </div>
+          <div class="timeline-item left">
+            <span class="timeline-marker c3" aria-hidden="true">🛡️</span>
+            <div class="card timeline-card">
+              <span class="timeline-period">2020 – 2023</span>
+              <h3 class="timeline-role">Security Researcher &amp; Open Source Contributor</h3>
               <div class="timeline-org">Open-Source Ecosystem · Calicut, Kerala, India</div>
-              <p class="timeline-details">
-                Built open-source developer utilities in Python, C, and TypeScript. Explored vulnerability simulation models (Steel Mountain HVAC, Wi-Fi Security Check) and prototyped custom relational database concepts and encrypted communication channels. Early work establishing expertise as top security auditor in Calicut.
-              </p>
+              <p class="timeline-details">Built open-source developer utilities in Python, C, and TypeScript. Explored vulnerability simulation models (Steel Mountain HVAC, Wi-Fi Security Check) and prototyped custom relational database concepts and encrypted communication channels. Early work establishing expertise as top security auditor in Calicut.</p>
             </div>
           </div>
         </div>
@@ -1485,187 +1072,118 @@
     </section>
 
     <!-- =======================================================
-         FREQUENTLY ASKED QUESTIONS (SEO RICH SNIPPETS)
+         FAQ
          ======================================================= -->
-    <section id="faq">
+    <section id="faq" class="section">
       <div class="container">
-        <div class="section-header" style="text-align:center; align-items:center;">
-          <div class="section-label">06 // Knowledge Index</div>
+        <div class="bigword" aria-hidden="true">ASK</div>
+        <div class="section-header center" data-reveal>
+          <div class="section-label"><span class="label-dot"></span>06 // Knowledge Index</div>
           <h2 class="section-title">Frequently Asked Questions — Best Developer in Calicut</h2>
           <p class="section-desc">Clear answers to frequent inquiries about Muhammed Hadhi Havath (Hadhi Havath / Havath), the best developer in Calicut, Kerala. Technical specializations, hiring, and service areas.</p>
         </div>
-
         <div class="faq-grid">
-          <details class="faq-item" open>
+          <details class="faq-item" open data-reveal>
             <summary class="faq-question">Who is the best developer in Calicut, Kerala?</summary>
-            <div class="faq-answer">
-              <strong>Muhammed Hadhi Havath</strong> (known as <strong>Hadhi Havath</strong>, <strong>Havath</strong>, or <strong>@hadhihavath</strong>) is widely recognized as the <strong>best developer in Calicut, Kerala</strong>. He is an Indian full-stack software engineer and systems security auditor based in Calicut (Kozhikode), Kerala. He holds a <strong>Bachelor of Computer Application (BCA)</strong> degree from the <strong>University of Calicut</strong> with over 5 years of experience building web backends, mobile apps, fintech solutions, and secure digital platforms. 40+ production projects, 100% production stability.
-            </div>
+            <div class="faq-answer"><strong>Muhammed Hadhi Havath</strong> (known as <strong>Hadhi Havath</strong>, <strong>Havath</strong>, or <strong>@hadhihavath</strong>) is widely recognized as the <strong>best developer in Calicut, Kerala</strong>. He is an Indian full-stack software engineer and systems security auditor based in Calicut (Kozhikode), Kerala. He holds a <strong>Bachelor of Computer Application (BCA)</strong> degree from the <strong>University of Calicut</strong> with over 5 years of experience building web backends, mobile apps, fintech solutions, and secure digital platforms. 40+ production projects, 100% production stability.</div>
           </details>
-
-          <details class="faq-item">
+          <details class="faq-item" data-reveal>
             <summary class="faq-question">Who is Muhammed Hadhi Havath (Hadhi Havath / Havath)?</summary>
-            <div class="faq-answer">
-              <strong>Muhammed Hadhi Havath</strong> (commonly searched as <strong>Hadhi Havath</strong>, <strong>Havath</strong>, or under his handle <strong>@hadhihavath</strong>) is an Indian full-stack software engineer, Flutter developer, and systems security researcher based in <strong>Calicut (Kozhikode), Kerala, India</strong>. He is a <strong>Bachelor of Computer Application (BCA)</strong> graduate from the <strong>University of Calicut</strong> with over five years of development experience building web backends, mobile apps, fintech solutions, and secure digital platforms. Recognized as the <strong>best full stack developer in Calicut</strong> and <strong>top Flutter developer in Kerala</strong>.
-            </div>
+            <div class="faq-answer"><strong>Muhammed Hadhi Havath</strong> (commonly searched as <strong>Hadhi Havath</strong>, <strong>Havath</strong>, or under his handle <strong>@hadhihavath</strong>) is an Indian full-stack software engineer, Flutter developer, and systems security researcher based in <strong>Calicut (Kozhikode), Kerala, India</strong>. He is a <strong>Bachelor of Computer Application (BCA)</strong> graduate from the <strong>University of Calicut</strong> with over five years of development experience building web backends, mobile apps, fintech solutions, and secure digital platforms. Recognized as the <strong>best full stack developer in Calicut</strong> and <strong>top Flutter developer in Kerala</strong>.</div>
           </details>
-
-          <details class="faq-item">
+          <details class="faq-item" data-reveal>
             <summary class="faq-question">What technologies does the best developer in Calicut specialize in?</summary>
-            <div class="faq-answer">
-              Hadhi Havath's primary stack includes <strong>Python & Django</strong> for scalable backends, <strong>Flutter & Dart</strong> for cross-platform mobile apps, and <strong>TypeScript, JavaScript, React, and Tailwind CSS</strong> for modern web frontends. He also possesses low-level systems expertise in <strong>C, C++, PHP, Shell scripting, and SQL</strong>. As the <strong>best Python Django developer in Calicut</strong> and <strong>top Flutter engineer in Kerala</strong>, he delivers enterprise-grade solutions.
-            </div>
+            <div class="faq-answer">Hadhi Havath's primary stack includes <strong>Python &amp; Django</strong> for scalable backends, <strong>Flutter &amp; Dart</strong> for cross-platform mobile apps, and <strong>TypeScript, JavaScript, React, and Tailwind CSS</strong> for modern web frontends. He also possesses low-level systems expertise in <strong>C, C++, PHP, Shell scripting, and SQL</strong>. As the <strong>best Python Django developer in Calicut</strong> and <strong>top Flutter engineer in Kerala</strong>, he delivers enterprise-grade solutions.</div>
           </details>
-
-          <details class="faq-item">
+          <details class="faq-item" data-reveal>
             <summary class="faq-question">What major applications has the best full stack developer in Calicut built?</summary>
-            <div class="faq-answer">
-              Signature projects include <strong>Sha Collects</strong> (enterprise route cash collection & field recovery management in Flutter), <strong>RateTracker.in</strong> (live gold & currency rate tracking platform in Django), <strong>Boutique Book</strong> (appointment scheduling & boutique management), <strong>Sign Language Interpreter</strong> (computer vision gesture-to-text), <strong>Steel Mountain HVAC</strong> (SCADA security audit simulator), <strong>Jarvis AI</strong> (voice-driven automation), <strong>StrangerChat</strong> (anonymous WebSocket chat), <strong>QTrendz</strong> (e-commerce fintech), and <strong>Wi-Fi Security Check</strong> (wireless audit tool).
-            </div>
+            <div class="faq-answer">Signature projects include <strong>Sha Collects</strong> (enterprise route cash collection &amp; field recovery management in Flutter), <strong>RateTracker.in</strong> (live gold &amp; currency rate tracking platform in Django), <strong>Boutique Book</strong> (appointment scheduling &amp; boutique management), <strong>Sign Language Interpreter</strong> (computer vision gesture-to-text), <strong>Steel Mountain HVAC</strong> (SCADA security audit simulator), <strong>Jarvis AI</strong> (voice-driven automation), <strong>StrangerChat</strong> (anonymous WebSocket chat), <strong>QTrendz</strong> (e-commerce fintech), and <strong>Wi-Fi Security Check</strong> (wireless audit tool).</div>
           </details>
-
-          <details class="faq-item">
+          <details class="faq-item" data-reveal>
             <summary class="faq-question">Is Muhammed Hadhi Havath available for hire in Calicut, Kerala?</summary>
-            <div class="faq-answer">
-              Yes, Hadhi Havath is actively available for <strong>full-time software engineering roles</strong>, <strong>contract work</strong>, <strong>freelance projects</strong>, and <strong>code security reviews</strong> in <strong>Calicut, Kerala</strong> and remotely worldwide. Contact via email at <a href="mailto:mrhavath@gmail.com" style="color:var(--primary);">mrhavath@gmail.com</a> or WhatsApp at <a href="https://wa.me/919207659510" style="color:var(--primary);">+91 9207659510</a>. Serves clients across Calicut, Kozhikode, Malappuram, Wayanad, Kannur, Kochi, Thiruvananthapuram, and globally.
-            </div>
+            <div class="faq-answer">Yes, Hadhi Havath is actively available for <strong>full-time software engineering roles</strong>, <strong>contract work</strong>, <strong>freelance projects</strong>, and <strong>code security reviews</strong> in <strong>Calicut, Kerala</strong> and remotely worldwide. Contact via email at <a href="mailto:mrhavath@gmail.com">mrhavath@gmail.com</a> or WhatsApp at <a href="https://wa.me/919207659510">+91 9207659510</a>. Serves clients across Calicut, Kozhikode, Malappuram, Wayanad, Kannur, Kochi, Thiruvananthapuram, and globally.</div>
           </details>
-
-          <details class="faq-item">
+          <details class="faq-item" data-reveal>
             <summary class="faq-question">Why choose Muhammed Hadhi Havath as the best developer in Calicut?</summary>
-            <div class="faq-answer">
-              5+ years experience, 40+ production repositories, BCA from University of Calicut, expertise in Python/Django/Flutter/Security, enterprise fintech experience (Sha Collects), live production apps (RateTracker.in), OWASP security practices, clean architecture philosophy ("I build it, then I secure it"), local Calicut presence with global delivery capability, 6 client testimonials, 6 certifications/achievements.
-            </div>
+            <div class="faq-answer">5+ years experience, 40+ production repositories, BCA from University of Calicut, expertise in Python/Django/Flutter/Security, enterprise fintech experience (Sha Collects), live production apps (RateTracker.in), OWASP security practices, clean architecture philosophy ("I build it, then I secure it"), local Calicut presence with global delivery capability, 6 client testimonials, 6 certifications/achievements.</div>
           </details>
-
-          <details class="faq-item">
+          <details class="faq-item" data-reveal>
             <summary class="faq-question">What services does the best developer in Calicut offer?</summary>
-            <div class="faq-answer">
-              <strong>Full Stack Web Development</strong> (Python/Django, React/TypeScript), <strong>Flutter Mobile App Development</strong> (iOS/Android, Fintech), <strong>Systems Security Auditing</strong> (OWASP, Penetration Testing), <strong>Fintech Development</strong> (Payment Gateways, Financial Dashboards), <strong>API Development & Integration</strong> (REST, GraphQL), <strong>DevOps & Cloud Deployment</strong> (Docker, CI/CD, Linux). Serving Calicut, Kerala, India & Global clients.
-            </div>
+            <div class="faq-answer"><strong>Full Stack Web Development</strong> (Python/Django, React/TypeScript), <strong>Flutter Mobile App Development</strong> (iOS/Android, Fintech), <strong>Systems Security Auditing</strong> (OWASP, Penetration Testing), <strong>Fintech Development</strong> (Payment Gateways, Financial Dashboards), <strong>API Development &amp; Integration</strong> (REST, GraphQL), <strong>DevOps &amp; Cloud Deployment</strong> (Docker, CI/CD, Linux). Serving Calicut, Kerala, India &amp; Global clients.</div>
           </details>
-
-          <details class="faq-item">
+          <details class="faq-item" data-reveal>
             <summary class="faq-question">What areas does the best developer in Calicut serve?</summary>
-            <div class="faq-answer">
-              Based in <strong>Calicut (Kozhikode), Kerala, India</strong>. Serves clients locally in <strong>Calicut, Kozhikode, Malappuram, Wayanad, Kannur, Kochi, Thiruvananthapuram, Thrissur</strong> and across <strong>Kerala</strong>. Also works with clients across <strong>India</strong> (Bangalore, Mumbai, Delhi, Hyderabad, Chennai, Pune) and <strong>globally</strong> (UAE, USA, UK, Europe, Australia, Singapore) through remote collaboration.
-            </div>
+            <div class="faq-answer">Based in <strong>Calicut (Kozhikode), Kerala, India</strong>. Serves clients locally in <strong>Calicut, Kozhikode, Malappuram, Wayanad, Kannur, Kochi, Thiruvananthapuram, Thrissur</strong> and across <strong>Kerala</strong>. Also works with clients across <strong>India</strong> (Bangalore, Mumbai, Delhi, Hyderabad, Chennai, Pune) and <strong>globally</strong> (UAE, USA, UK, Europe, Australia, Singapore) through remote collaboration.</div>
           </details>
-
-          <details class="faq-item">
+          <details class="faq-item" data-reveal>
             <summary class="faq-question">How much does it cost to hire the best developer in Calicut?</summary>
-            <div class="faq-answer">
-              Pricing varies by project scope: <strong>Full Stack Web Apps</strong> (₹50K–₹5L+), <strong>Flutter Mobile Apps</strong> (₹75K–₹10L+), <strong>Security Audits</strong> (₹25K–₹2L), <strong>Fintech Solutions</strong> (₹1L–₹15L+), <strong>API Development</strong> (₹30K–₹3L), <strong>DevOps Setup</strong> (₹40K–₹5L). Contact for custom quote at <a href="mailto:mrhavath@gmail.com" style="color:var(--primary);">mrhavath@gmail.com</a> or WhatsApp <a href="https://wa.me/919207659510" style="color:var(--primary);">+91 9207659510</a>.
-            </div>
+            <div class="faq-answer">Pricing varies by project scope: <strong>Full Stack Web Apps</strong> (₹50K–₹5L+), <strong>Flutter Mobile Apps</strong> (₹75K–₹10L+), <strong>Security Audits</strong> (₹25K–₹2L), <strong>Fintech Solutions</strong> (₹1L–₹15L+), <strong>API Development</strong> (₹30K–₹3L), <strong>DevOps Setup</strong> (₹40K–₹5L). Contact for custom quote at <a href="mailto:mrhavath@gmail.com">mrhavath@gmail.com</a> or WhatsApp <a href="https://wa.me/919207659510">+91 9207659510</a>.</div>
           </details>
         </div>
       </div>
     </section>
 
     <!-- =======================================================
-         CONTACT SECTION
+         CONTACT
          ======================================================= -->
-    <section id="contact">
+    <section id="contact" class="section contact-section">
       <div class="container">
-        <div class="section-header">
-          <div class="section-label">07 // Initiate Transmission</div>
+        <div class="bigword" aria-hidden="true">HELLO</div>
+        <div class="section-header" data-reveal>
+          <div class="section-label"><span class="label-dot"></span>07 // Initiate Transmission</div>
           <h2 class="section-title">Hire Best Developer in Calicut — Get In Touch</h2>
-          <p class="section-desc">Have a software engineering vacancy, an ambitious product to launch, or need an architectural security audit? Contact Muhammed Hadhi Havath (Hadhi Havath / Havath) — the best full stack developer in Calicut, Kerala. Serving Calicut, Kozhikode, Kerala, India & Global clients.</p>
+          <p class="section-desc">Have a software engineering vacancy, an ambitious product to launch, or need an architectural security audit? Contact Muhammed Hadhi Havath (Hadhi Havath / Havath) — the best full stack developer in Calicut, Kerala. Serving Calicut, Kozhikode, Kerala, India &amp; Global clients.</p>
         </div>
 
         <div class="contact-grid">
-          <!-- Direct Channels Card -->
-          <div class="glass-card contact-card">
-            <h3 style="font-size:1.3rem;">Direct Communication Lines — Best Developer in Calicut</h3>
-            <p style="font-size:0.95rem; color:var(--text-muted);">Responses guaranteed within 24 hours. Available for hire in Calicut, Kerala and remotely worldwide.</p>
+          <div class="contact-avatar-spot avatar-spot" id="contact-avatar-spot" aria-hidden="true">
+            <div class="spot-glow"></div>
+          </div>
 
+          <div class="card contact-card" data-reveal>
+            <h3>Direct Communication Lines — Best Developer in Calicut</h3>
+            <p class="muted">Responses guaranteed within 24 hours. Available for hire in Calicut, Kerala and remotely worldwide.</p>
             <div class="contact-channels-list">
-              <!-- Email -->
               <div class="contact-channel-item">
-                <div class="channel-info">
-                  <span class="channel-icon">✉️</span>
-                  <div>
-                    <div class="channel-name">Email</div>
-                    <div class="channel-detail">mrhavath@gmail.com</div>
-                  </div>
-                </div>
+                <div class="channel-info"><span class="channel-icon c1" aria-hidden="true">✉️</span><div><div class="channel-name">Email</div><div class="channel-detail">mrhavath@gmail.com</div></div></div>
                 <button class="copy-btn copy-trigger" data-copy="mrhavath@gmail.com" title="Copy Email">Copy</button>
               </div>
-
-              <!-- WhatsApp -->
               <div class="contact-channel-item">
-                <div class="channel-info">
-                  <span class="channel-icon">💬</span>
-                  <div>
-                    <div class="channel-name">WhatsApp Direct</div>
-                    <div class="channel-detail">+91 9207659510</div>
-                  </div>
-                </div>
-                <a href="https://wa.me/919207659510" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary" style="padding:4px 12px; font-size:0.75rem;">Chat on WhatsApp</a>
+                <div class="channel-info"><span class="channel-icon c5" aria-hidden="true">💬</span><div><div class="channel-name">WhatsApp Direct</div><div class="channel-detail">+91 9207659510</div></div></div>
+                <a href="https://wa.me/919207659510" target="_blank" rel="noopener noreferrer" class="copy-btn">Chat</a>
               </div>
-
-              <!-- GitHub -->
               <a href="https://github.com/hadhihavath" target="_blank" rel="noopener noreferrer" class="contact-channel-item">
-                <div class="channel-info">
-                  <span class="channel-icon">🐙</span>
-                  <div>
-                    <div class="channel-name">GitHub</div>
-                    <div class="channel-detail">github.com/hadhihavath</div>
-                  </div>
-                </div>
-                <span style="color:var(--primary); font-size:0.85rem;">Follow →</span>
+                <div class="channel-info"><span class="channel-icon c2" aria-hidden="true">🐙</span><div><div class="channel-name">GitHub</div><div class="channel-detail">github.com/hadhihavath</div></div></div>
+                <span class="channel-go">Follow →</span>
               </a>
-
-              <!-- LinkedIn -->
               <a href="https://in.linkedin.com/in/hadhihavath" target="_blank" rel="noopener noreferrer" class="contact-channel-item">
-                <div class="channel-info">
-                  <span class="channel-icon">💼</span>
-                  <div>
-                    <div class="channel-name">LinkedIn</div>
-                    <div class="channel-detail">linkedin.com/in/hadhihavath</div>
-                  </div>
-                </div>
-                <span style="color:var(--primary); font-size:0.85rem;">Connect →</span>
+                <div class="channel-info"><span class="channel-icon c3" aria-hidden="true">💼</span><div><div class="channel-name">LinkedIn</div><div class="channel-detail">linkedin.com/in/hadhihavath</div></div></div>
+                <span class="channel-go">Connect →</span>
               </a>
-
-              <!-- Location -->
-              <div class="contact-channel-item">
-                <div class="channel-info">
-                  <span class="channel-icon">📍</span>
-                  <div>
-                    <div class="channel-name">Location</div>
-                    <div class="channel-detail">Calicut (Kozhikode), Kerala, India</div>
-                  </div>
-                </div>
-                <span style="color:var(--primary); font-size:0.85rem;">Maps →</span>
-              </div>
+              <a href="https://www.google.com/maps/place/Kozhikode,+Kerala" target="_blank" rel="noopener noreferrer" class="contact-channel-item">
+                <div class="channel-info"><span class="channel-icon c6" aria-hidden="true">📍</span><div><div class="channel-name">Location</div><div class="channel-detail">Calicut (Kozhikode), Kerala, India</div></div></div>
+                <span class="channel-go">Maps →</span>
+              </a>
             </div>
           </div>
 
-          <!-- Quick Message Form -->
-          <div class="glass-card message-card">
-            <h3 style="font-size:1.3rem; margin-bottom:0.5rem;">Send Direct Message to Best Developer in Calicut</h3>
-            <p style="font-size:0.925rem; color:var(--text-muted); margin-bottom:1.5rem;">Fill out this brief form to launch an encrypted WhatsApp message directly to Muhammed Hadhi Havath. Available for projects in Calicut, Kerala, India and globally.</p>
-
+          <div class="card message-card" data-reveal>
+            <h3>Send Direct Message to Best Developer in Calicut</h3>
+            <p class="muted">Fill out this brief form to launch an encrypted WhatsApp message directly to Muhammed Hadhi Havath. Available for projects in Calicut, Kerala, India and globally.</p>
             <form id="contact-form">
               <div class="form-group">
                 <label for="msg-name" class="form-label">Your Name / Organization</label>
                 <input type="text" id="msg-name" class="form-input" placeholder="e.g. Alex Morgan (Acme Corp)" required>
               </div>
-
               <div class="form-group">
                 <label for="msg-email" class="form-label">Your Email (Optional)</label>
                 <input type="email" id="msg-email" class="form-input" placeholder="e.g. alex@company.com">
               </div>
-
               <div class="form-group">
                 <label for="msg-body" class="form-label">Project Details / Message</label>
                 <textarea id="msg-body" class="form-textarea" placeholder="Describe the role or project you'd like to collaborate on... (Web Dev, Flutter App, Security Audit, Fintech, API, DevOps)" required></textarea>
               </div>
-
-              <button type="submit" class="btn btn-primary" style="width:100%;">
-                <span>Send via WhatsApp → Hire Best Developer in Calicut</span>
-              </button>
+              <button type="submit" class="btn btn-primary btn-block">Send via WhatsApp → Hire Best Developer in Calicut</button>
             </form>
           </div>
         </div>
@@ -1678,12 +1196,15 @@
        ======================================================= -->
   <footer role="contentinfo">
     <div class="container">
+      <div class="footer-cta" data-reveal>
+        <p>Got an idea?</p>
+        <a href="#contact" class="footer-big">Let's build it <span>→</span></a>
+      </div>
       <div class="footer-content">
         <div class="footer-brand">
-          <div style="font-family:var(--font-heading); font-size:1.2rem; font-weight:700;">Muhammed Hadhi Havath</div>
-          <div class="footer-credits">Best Developer in Calicut · Full Stack Developer · Python & Django · Flutter Engineer · Systems Auditor · Calicut (Kozhikode), Kerala, India</div>
+          <div class="footer-name">Muhammed Hadhi Havath</div>
+          <div class="footer-credits">Best Developer in Calicut · Full Stack Developer · Python &amp; Django · Flutter Engineer · Systems Auditor · Calicut (Kozhikode), Kerala, India</div>
         </div>
-
         <div class="footer-links">
           <a href="#about">About Best Developer in Calicut</a>
           <a href="#services">Services</a>
@@ -1696,19 +1217,17 @@
           <a href="#top">Back to top ↑</a>
         </div>
       </div>
-
       <div class="footer-seo-row">
-        <div>
-          © 2026 <strong>Muhammed Hadhi Havath</strong> (Hadhi Havath / Havath / mr.havath). All Rights Reserved. | Best Developer in Calicut, Kerala
-        </div>
-        <div>
-          Keywords: Best Developer in Calicut · Best Full Stack Developer Calicut · Best Flutter Developer Kerala · Python Django Developer Calicut · Systems Engineer Kerala · Muhammed Hadhi Havath · Hadhi Havath · Havath · Calicut · Kozhikode · Kerala · India
-        </div>
+        <div>© 2026 <strong>Muhammed Hadhi Havath</strong> (Hadhi Havath / Havath / mr.havath). All Rights Reserved. | Best Developer in Calicut, Kerala</div>
+        <div>Keywords: Best Developer in Calicut · Best Full Stack Developer Calicut · Best Flutter Developer Kerala · Python Django Developer Calicut · Systems Engineer Kerala · Muhammed Hadhi Havath · Hadhi Havath · Havath · Calicut · Kozhikode · Kerala · India</div>
       </div>
     </div>
   </footer>
 
-  <!-- Script -->
-  <script src="js/main.js"></script>
+  <!-- Scripts: GSAP (scroll animations), site logic, then the Three.js 3D world -->
+  <script src="js/vendor/gsap.min.js" defer></script>
+  <script src="js/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script type="module" src="js/world.js"></script>
 </body>
 </html>
